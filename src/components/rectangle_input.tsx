@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Constraint, Rectangle} from '../rectangle';
+import {Constraint, getConstraint, Rectangle} from '../';
 
 interface Properties {
 
@@ -110,22 +110,10 @@ export class RectanglesInput extends React.Component<Properties> {
   private onChangeConstraint = (index: number) => (direction: Direction) =>
       (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newRectangles = this.props.rectangles.slice();
-    const newConstraint = this.getConstraint(event.target.value);
-    if(newConstraint) {
-      newRectangles[index][direction] = newConstraint;
-    }
+    const newConstraint = getConstraint(event.target.value);
+    newRectangles[index][direction] = newConstraint ??
+      newRectangles[index][direction];
     this.props.onUpdate(newRectangles);
-  }
-
-  private getConstraint(text: string) {
-    switch(text) {
-      case 'FIXED':
-        return Constraint.FIXED;
-      case 'FILL_SPACE':
-        return Constraint.FILL_SPACE;
-      case 'FIT_CONTENT':
-        return Constraint.FIT_CONTENT;
-    }
   }
 
   private static readonly STYLE = {

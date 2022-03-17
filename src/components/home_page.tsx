@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Constraint, Rectangle} from '../rectangle';
+import {getConstraint, Rectangle} from '../';
 import {LayoutViewer} from './layout_viewer';
 import {RectanglesInput} from './rectangle_input';
 
@@ -56,8 +56,8 @@ export class HomePage extends React.Component<Properties, State> {
   }
 
   private getRectangle(object: any) {
-    const horizontalPolicy = this.getConstraint(object?.horizontalPolicy);
-    const verticalPolicy = this.getConstraint(object?.verticalPolicy);
+    const horizontalPolicy = getConstraint(object?.horizontalPolicy);
+    const verticalPolicy = getConstraint(object?.verticalPolicy);
     if(typeof object?.name === 'string' && typeof object?.width === 'number' &&
         typeof object?.height === 'number' && typeof object?.x === 'number' &&
         typeof object?.y === 'number' && horizontalPolicy !== null &&
@@ -71,19 +71,6 @@ export class HomePage extends React.Component<Properties, State> {
         horizontalPolicy,
         verticalPolicy
       } as Rectangle;
-    }
-  }
-
-  private getConstraint(text: string): Constraint | null {
-    switch(text.toUpperCase()) {
-      case 'FIXED':
-        return Constraint.FIXED;
-      case 'FILL_SPACE':
-        return Constraint.FILL_SPACE;
-      case 'FIT_CONTENT':
-        return Constraint.FIT_CONTENT;
-      default:
-        return null;
     }
   }
 
