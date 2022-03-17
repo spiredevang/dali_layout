@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Constraint, Rectangle} from '../rectangle';
+import {LayoutViewer} from './layout_viewer';
 
 interface Properties {}
 
@@ -20,6 +21,7 @@ export class HomePage extends React.Component<Properties, State> {
       <div style={HomePage.STYLE.container}>
         <h1>Layout Application</h1>
         <input type='file' onChange={this.onChange}/>
+        <LayoutViewer rectangles={this.state.rectangles}/>
       </div>);
   }
 
@@ -74,6 +76,8 @@ export class HomePage extends React.Component<Properties, State> {
         return Constraint.FIXED;
       case 'FILL_SPACE':
         return Constraint.FILL_SPACE;
+      case 'FIT_CONTENT':
+        return Constraint.FIT_CONTENT;
       default:
         return null;
     }
@@ -84,6 +88,7 @@ export class HomePage extends React.Component<Properties, State> {
       width: 'clamp(767px, 100%, 1280px)',
       padding: '0 15px',
       display: 'flex',
+      rowGap: 20,
       flexDirection: 'column'
     } as React.CSSProperties
   };

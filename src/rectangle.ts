@@ -10,5 +10,6 @@ export interface Rectangle {
 
 export enum Constraint {
   FIXED,
-  FILL_SPACE
+  FILL_SPACE,
+  FIT_CONTENT
 }
