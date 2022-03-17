@@ -11,8 +11,7 @@ function App() {
 const STYLE = {
   container: {
     display: 'flex',
-    justifyContent: 'center',
-    paddingTop: 50
+    justifyContent: 'center'
   } as React.CSSProperties
 }
 

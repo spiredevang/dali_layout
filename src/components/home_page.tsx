@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {Constraint, Rectangle} from '../rectangle';
 import {LayoutViewer} from './layout_viewer';
+import {RectanglesInput} from './rectangle_input';
 
 interface Properties {}
 
@@ -16,12 +17,15 @@ export class HomePage extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
-    console.log('render', this.state.rectangles);
     return (
       <div style={HomePage.STYLE.container}>
         <h1>Layout Application</h1>
         <input type='file' onChange={this.onChange}/>
-        <LayoutViewer rectangles={this.state.rectangles}/>
+        <div style={HomePage.STYLE.viewerContainer}>
+          <LayoutViewer rectangles={this.state.rectangles}/>
+          <RectanglesInput rectangles={this.state.rectangles}
+            onUpdate={this.onUpdateRectangles}/>
+        </div>
       </div>);
   }
 
@@ -83,6 +87,10 @@ export class HomePage extends React.Component<Properties, State> {
     }
   }
 
+  private onUpdateRectangles = (rectangles: Rectangle[]) => {
+    this.setState({rectangles});
+  }
+
   private static readonly STYLE = {
     container: {
       width: 'clamp(767px, 100%, 1280px)',
@@ -90,6 +98,13 @@ export class HomePage extends React.Component<Properties, State> {
       display: 'flex',
       rowGap: 20,
       flexDirection: 'column'
+    } as React.CSSProperties,
+    viewerContainer: {
+      display: 'grid',
+      columnGap: 10,
+      gridTemplateColumns: 'auto 260px',
+      alignItems: 'baseline',
+      height: 'calc(100vh - 150px)'
     } as React.CSSProperties
   };
 }
