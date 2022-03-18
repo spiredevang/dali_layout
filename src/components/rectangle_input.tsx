@@ -42,14 +42,14 @@ export class RectanglesInput extends React.Component<Properties> {
             onChange={this.onChangeHeight(index)}/>
         </div>
         <div style={RectanglesInput.STYLE.field}>
-          <label htmlFor={`x${index}`}>X</label>
-          <input type='number' id={`x${index}`} value={rectangle.x}
-            onChange={this.onChangeX(index)}/>
+          <label htmlFor={`left${index}`}>Left</label>
+          <input type='number' id={`left${index}`} value={rectangle.left}
+            onChange={this.onChangeLeft(index)}/>
         </div>
         <div style={RectanglesInput.STYLE.field}>
-          <label htmlFor={`y${index}`}>Y</label>
-          <input type='number' id={`id${index}`} value={rectangle.y}
-            onChange={this.onChangeY(index)}/>
+          <label htmlFor={`top${index}`}>Top</label>
+          <input type='number' id={`id${index}`} value={rectangle.top}
+            onChange={this.onChangeTop(index)}/>
         </div>
         <div style={RectanglesInput.STYLE.field}>
           <label htmlFor={`horizontalPolicy${index}`}>Horizontal policy</label>
@@ -93,17 +93,17 @@ export class RectanglesInput extends React.Component<Properties> {
     this.props.onUpdate(newRectangles);
   }
 
-  private onChangeX = (index: number) => (
+  private onChangeLeft = (index: number) => (
       event: React.ChangeEvent<HTMLInputElement>) => {
     const newRectangles = this.props.rectangles.slice();
-    newRectangles[index].x = event.target.valueAsNumber;
+    newRectangles[index].left = event.target.valueAsNumber;
     this.props.onUpdate(newRectangles);
   }
 
-  private onChangeY = (index: number) => (
+  private onChangeTop = (index: number) => (
       event: React.ChangeEvent<HTMLInputElement>) => {
     const newRectangles = this.props.rectangles.slice();
-    newRectangles[index].y = event.target.valueAsNumber;
+    newRectangles[index].top = event.target.valueAsNumber;
     this.props.onUpdate(newRectangles);
   }
 

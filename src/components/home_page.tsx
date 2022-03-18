@@ -59,15 +59,15 @@ export class HomePage extends React.Component<Properties, State> {
     const horizontalPolicy = getConstraint(object?.horizontalPolicy);
     const verticalPolicy = getConstraint(object?.verticalPolicy);
     if(typeof object?.name === 'string' && typeof object?.width === 'number' &&
-        typeof object?.height === 'number' && typeof object?.x === 'number' &&
-        typeof object?.y === 'number' && horizontalPolicy !== null &&
+        typeof object?.height === 'number' && typeof object?.left === 'number' &&
+        typeof object?.top === 'number' && horizontalPolicy !== null &&
         verticalPolicy !== null) {
       return {
         name: object.name,
         width: object.width,
         height: object.height,
-        x: object.x,
-        y: object.y,
+        left: object.left,
+        top: object.top,
         horizontalPolicy,
         verticalPolicy
       } as Rectangle;

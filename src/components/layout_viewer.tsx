@@ -85,8 +85,8 @@ export class LayoutViewer extends React.Component<Properties> {
           style={{
             ...LayoutViewer.STYLE.basicRectangle,
             backgroundColor,
-            top: rectangle.y,
-            left: rectangle.x,
+            top: rectangle.top,
+            left: rectangle.left,
             width: rectangle.width,
             height: rectangle.height}}
           className={extraStyle}>

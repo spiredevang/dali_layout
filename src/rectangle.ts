@@ -2,8 +2,8 @@ export interface Rectangle {
   name: string;
   width: number;
   height: number;
-  x: number;
-  y: number;
+  left: number;
+  top: number;
   horizontalPolicy: Constraint;
   verticalPolicy: Constraint;
 }
