@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {Constraint, getConstraint, Rectangle} from '../';
+import {Constraint, Rectangle} from '../rectangle';
+import {getConstraint} from '../utilities';
 
 interface Properties {
 

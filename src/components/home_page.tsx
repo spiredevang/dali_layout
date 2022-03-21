@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {getConstraint, Rectangle} from '../';
+import {Rectangle} from '../rectangle';
+import {getConstraint} from '../utilities';
 import {LayoutViewer} from './layout_viewer';
 import {RectanglesInput} from './rectangle_input';
 
