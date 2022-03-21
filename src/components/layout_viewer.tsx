@@ -18,14 +18,14 @@ export class LayoutViewer extends React.Component<Properties> {
   private renderRectangle(rectangle: Rectangle, index: number) {
     const isConstraintUniform = rectangle.horizontalPolicy ===
       rectangle.verticalPolicy;
-    const backgroundColor = isConstraintUniform &&
-      LayoutViewer.CONSTRAINT_COLORS[rectangle.horizontalPolicy] || '#F5F5F5';
+    const backgroundColor = (isConstraintUniform &&
+      LayoutViewer.CONSTRAINT_COLORS[rectangle.horizontalPolicy]) || '#F5F5F5';
     const extraStyle = (() => {
       if(isConstraintUniform) {
         return '';
       }
-      const mainConstraint = (rectangle.horizontalPolicy === Constraint.FIXED
-        || rectangle.verticalPolicy === Constraint.FIXED) ? Constraint.FIXED :
+      const mainConstraint = (rectangle.horizontalPolicy === Constraint.FIXED)
+        || (rectangle.verticalPolicy === Constraint.FIXED) ? Constraint.FIXED :
         Constraint.FILL_SPACE;
       const mainColor = LayoutViewer.CONSTRAINT_COLORS[mainConstraint];
       if(rectangle.horizontalPolicy === mainConstraint) {
