@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {LayoutGraph} from '../graph';
 import {Rectangle} from '../rectangle';
 import {getConstraint} from '../utilities';
 import {LayoutViewer} from './layout_viewer';
@@ -15,6 +16,7 @@ export class HomePage extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props)
     this.state = {rectangles: []};
+    this.layoutGraph = new LayoutGraph([]);
   }
 
   public render(): JSX.Element {
@@ -53,6 +55,7 @@ export class HomePage extends React.Component<Properties, State> {
           return rectangles;
         }, []);
       this.setState({rectangles});
+      this.layoutGraph = new LayoutGraph(rectangles);
     }
   }
 
@@ -95,4 +98,5 @@ export class HomePage extends React.Component<Properties, State> {
       height: 'calc(100vh - 150px)'
     } as React.CSSProperties
   };
+  private layoutGraph: LayoutGraph;
 }
