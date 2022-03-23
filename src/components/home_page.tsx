@@ -25,12 +25,19 @@ export class HomePage extends React.Component<Properties, State> {
   }
 
   public render(): JSX.Element {
+    const {layoutHandler, buttonText} = (() => {
+      if(this.state.isPopupDisplayed) {
+        return {layoutHandler: this.onCloseLayoutPopup, buttonText: 'Close'};
+      } else {
+        return {layoutHandler: this.onOpenLayoutPopup, buttonText: 'Open'};
+      }
+    })();
     return (
       <div style={HomePage.STYLE.container}>
         <h1>Layout Application</h1>
         <div style={HomePage.STYLE.toolbar}>
           <input type='file' onChange={this.onChange}/>
-          <button onClick={this.onOpenLayoutPopup}>Launch layout</button>
+          <button onClick={layoutHandler}>{buttonText} layout</button>
         </div>
         <div style={HomePage.STYLE.viewerContainer}>
           <LayoutViewer rectangles={this.state.rectangles}/>
