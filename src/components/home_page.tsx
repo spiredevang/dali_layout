@@ -2,6 +2,7 @@ import * as React from 'react';
 import {LayoutGraph} from '../graph';
 import {Rectangle} from '../rectangle';
 import {getConstraint} from '../utilities';
+import {LayoutPopup} from './layout_popup';
 import {LayoutViewer} from './layout_viewer';
 import {RectanglesInput} from './rectangle_input';
 
@@ -9,13 +10,17 @@ interface Properties {}
 
 interface State {
   rectangles: Rectangle[];
+  isPopupDisplayed: boolean;
 }
 
 /** The home page component. */
 export class HomePage extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props)
-    this.state = {rectangles: []};
+    this.state = {
+      rectangles: [],
+      isPopupDisplayed: false
+    };
     this.layoutGraph = new LayoutGraph([]);
   }
 
@@ -23,11 +28,20 @@ export class HomePage extends React.Component<Properties, State> {
     return (
       <div style={HomePage.STYLE.container}>
         <h1>Layout Application</h1>
-        <input type='file' onChange={this.onChange}/>
+        <div style={HomePage.STYLE.toolbar}>
+          <input type='file' onChange={this.onChange}/>
+          <button onClick={this.onOpenLayoutPopup}>Launch layout</button>
+        </div>
         <div style={HomePage.STYLE.viewerContainer}>
           <LayoutViewer rectangles={this.state.rectangles}/>
           <RectanglesInput rectangles={this.state.rectangles}
             onUpdate={this.onUpdateRectangles}/>
+        </div>
+        <div style={HomePage.STYLE.popupContainer}>
+          {this.state.isPopupDisplayed && (
+            <LayoutPopup onClosePopup={this.onCloseLayoutPopup}>
+              {this.renderLayoutPopup()}
+            </LayoutPopup>)}
         </div>
       </div>);
   }
@@ -82,13 +96,33 @@ export class HomePage extends React.Component<Properties, State> {
     this.setState({rectangles});
   }
 
+  private onOpenLayoutPopup = () => {
+    this.setState({isPopupDisplayed: true});
+  }
+
+  private onCloseLayoutPopup = () => {
+    this.setState({isPopupDisplayed: false});
+  }
+
+  private renderLayoutPopup() {
+    return (
+      <div style={HomePage.STYLE.layoutPopup}>
+        layout pop
+      </div>);
+  }
+
   private static readonly STYLE = {
     container: {
+      position: 'relative',
       width: 'clamp(767px, 100%, 1280px)',
       padding: '0 15px',
       display: 'flex',
       rowGap: 20,
       flexDirection: 'column'
+    } as React.CSSProperties,
+    toolbar: {
+      display: 'flex',
+      justifyContent: 'space-between'
     } as React.CSSProperties,
     viewerContainer: {
       display: 'grid',
@@ -96,6 +130,15 @@ export class HomePage extends React.Component<Properties, State> {
       gridTemplateColumns: 'auto 260px',
       alignItems: 'baseline',
       height: 'calc(100vh - 150px)'
+    } as React.CSSProperties,
+    popupContainer: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      zIndex: -1
+    } as React.CSSProperties,
+    layoutPopup: {
+      display: 'flex'
     } as React.CSSProperties
   };
   private layoutGraph: LayoutGraph;
