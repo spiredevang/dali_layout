@@ -104,7 +104,7 @@ export class LayoutViewer extends React.Component<Properties> {
       position: 'relative',
       overflow: 'auto',
       border: '5px solid #000000',
-      minHeight: 500
+      height: '100%'
     } as React.CSSProperties,
     basicRectangle: {
       position: 'absolute',

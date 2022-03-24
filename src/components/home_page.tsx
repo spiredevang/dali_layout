@@ -145,7 +145,7 @@ export class HomePage extends React.Component<Properties, State> {
   private static readonly STYLE = {
     container: {
       position: 'relative',
-      width: 'clamp(767px, 100%, 1280px)',
+      width: 'max(767px, 100%)',
       padding: '0 15px',
       display: 'flex',
       rowGap: 20,
