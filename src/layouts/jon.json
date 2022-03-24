@@ -1,0 +1,49 @@
+{
+  "layout": [
+    {
+      "name": "Header",
+      "width": 1920,
+      "height": 112,
+      "left": 0,
+      "top": 0,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "Nav",
+      "width": 306,
+      "height": 854,
+      "left": 0,
+      "top": 112,
+      "horizontalPolicy": "fixed",
+      "verticalPolicy": "fill_space"
+    },
+    {
+      "name": "Main",
+      "width": 1308,
+      "height": 854,
+      "left": 306,
+      "top": 112,
+      "horizontalPolicy": "fit_content",
+      "verticalPolicy": "fit_content"
+    },
+    {
+      "name": "Aside",
+      "width": 306,
+      "height": 854,
+      "left": 1614,
+      "top": 112,
+      "horizontalPolicy": "fixed",
+      "verticalPolicy": "fill_space"
+    },
+    {
+      "name": "Footer",
+      "width": 1920,
+      "height": 112,
+      "left": 0,
+      "top": 966,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fixed"
+    }
+  ]
+}

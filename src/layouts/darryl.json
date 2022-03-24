@@ -1,0 +1,121 @@
+{
+  "layout": [
+    {
+      "name": "A",
+      "width": 226,
+      "height": 128,
+      "left": 0,
+      "top": 0,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "B",
+      "width": 226,
+      "height": 224,
+      "left": 0,
+      "top": 128,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "C",
+      "width": 226,
+      "height": 160,
+      "left": 0,
+      "top": 352,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "D",
+      "width": 226,
+      "height": 304,
+      "left": 0,
+      "top": 512,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "",
+      "width": 226,
+      "height": 264,
+      "left": 0,
+      "top": 816,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fill_space"
+    },
+    {
+      "name": "E",
+      "width": 226,
+      "height": 224,
+      "left": 226,
+      "top": 0,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "F",
+      "width": 226,
+      "height": 224,
+      "left": 226,
+      "top": 224,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "G",
+      "width": 226,
+      "height": 480,
+      "left": 226,
+      "top": 448,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "",
+      "width": 226,
+      "height": 152,
+      "left": 226,
+      "top": 928,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fill_space"
+    },
+    {
+      "name": "H",
+      "width": 226,
+      "height": 160,
+      "left": 452,
+      "top": 0,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "I",
+      "width": 226,
+      "height": 160,
+      "left": 452,
+      "top": 160,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "J",
+      "width": 226,
+      "height": 400,
+      "left": 452,
+      "top": 320,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "",
+      "width": 226,
+      "height": 360,
+      "left": 452,
+      "top": 720,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fill_space"
+    }
+  ]
+}
