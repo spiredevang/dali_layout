@@ -24,8 +24,8 @@
       "height": 854,
       "left": 306,
       "top": 112,
-      "horizontalPolicy": "fit_content",
-      "verticalPolicy": "fit_content"
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fill_space"
     },
     {
       "name": "Aside",
