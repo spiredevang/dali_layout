@@ -1,14 +1,14 @@
 import {Rectangle} from './rectangle';
 
 interface HorizontalEdge {
-  node: LayoutNode;
+  nodes: [LayoutNode, LayoutNode];
   left: number;
   right: number;
   top: number;
 }
 
 interface VerticalEdge {
-  node: LayoutNode;
+  nodes: [LayoutNode, LayoutNode];
   top: number;
   bottom: number;
   left: number;
@@ -18,14 +18,14 @@ abstract class Graph {};
 
 abstract class Node {
   public abstract get Rectangle(): Rectangle;
-  public abstract addTopEdge(edge: HorizontalEdge): void;
-  public abstract addRightEdge(edge: VerticalEdge): void;
-  public abstract addBottomEdge(edge: HorizontalEdge): void;
-  public abstract addLeftEdge(edge: VerticalEdge): void;
-  public abstract get TopEdges(): HorizontalEdge[];
-  public abstract get RightEdges(): VerticalEdge[];
-  public abstract get BottomEdges(): HorizontalEdge[];
-  public abstract get LeftEdges(): VerticalEdge[];
+  public abstract addTopEdge(edge: string): void;
+  public abstract addRightEdge(edge: string): void;
+  public abstract addBottomEdge(edge: string): void;
+  public abstract addLeftEdge(edge: string): void;
+  public abstract get TopEdges(): string[];
+  public abstract get RightEdges(): string[];
+  public abstract get BottomEdges(): string[];
+  public abstract get LeftEdges(): string[];
 }
 
 export class LayoutNode extends Node {
@@ -43,43 +43,43 @@ export class LayoutNode extends Node {
     return this.rectangle;
   }
 
-  public addTopEdge(edge: HorizontalEdge) {
+  public addTopEdge(edge: string) {
     this.topEdges.push(edge);
   }
 
-  public addRightEdge(edge: VerticalEdge) {
+  public addRightEdge(edge: string) {
     this.rightEdges.push(edge);
   }
 
-  public addBottomEdge(edge: HorizontalEdge) {
+  public addBottomEdge(edge: string) {
     this.bottomEdges.push(edge);
   }
 
-  public addLeftEdge(edge: VerticalEdge) {
+  public addLeftEdge(edge: string) {
     this.leftEdges.push(edge);
   }
 
-  public get TopEdges(): HorizontalEdge[] {
+  public get TopEdges(): string[] {
     return this.topEdges;
   }
 
-  public get RightEdges(): VerticalEdge[] {
+  public get RightEdges(): string[] {
     return this.rightEdges;
   }
 
-  public get BottomEdges(): HorizontalEdge[] {
+  public get BottomEdges(): string[] {
     return this.bottomEdges;
   }
 
-  public get LeftEdges(): VerticalEdge[] {
+  public get LeftEdges(): string[] {
     return this.leftEdges;
   }
 
   private rectangle: Rectangle;
-  private topEdges: HorizontalEdge[];
-  private rightEdges: VerticalEdge[];
-  private bottomEdges: HorizontalEdge[];
-  private leftEdges: VerticalEdge[];
+  private topEdges: string[];
+  private rightEdges: string[];
+  private bottomEdges: string[];
+  private leftEdges: string[];
 }
 
 
@@ -87,6 +87,8 @@ export class LayoutGraph extends Graph {
   public constructor(rectangles: Rectangle[]) {
     super();
     this.nodes = rectangles.map(rectangle => new LayoutNode(rectangle));
+    this.horizontalEdges = {};
+    this.verticalEdges = {};
     this.nodes.forEach((node, nodeIndex) => {
       const nodeLeft = node.Rectangle.left;
       const nodeRight = node.Rectangle.left + node.Rectangle.width;
@@ -101,43 +103,61 @@ export class LayoutGraph extends Graph {
           if(nodeTop === surrBottom &&
               ((nodeLeft <= surrLeft && surrLeft < nodeRight) ||
               (nodeLeft < surrRight && surrRight <= nodeRight))) {
-            const horizontalEdge = {
-              node: surr,
-              top: nodeTop,
-              left: Math.max(nodeLeft, surrLeft),
-              right: Math.min(nodeRight, surrRight)
-            } as HorizontalEdge;
-            node.addTopEdge(horizontalEdge);
+            const left = Math.max(nodeLeft, surrLeft);
+            const edgeKey = `${left}-${nodeTop}`;
+            if(!(edgeKey in this.horizontalEdges)) {
+              const horizontalEdge = {
+                nodes: [surr, node],
+                top: nodeTop,
+                left,
+                right: Math.min(nodeRight, surrRight)
+              } as HorizontalEdge;
+              this.horizontalEdges[edgeKey] = horizontalEdge;
+            }
+            node.addTopEdge(edgeKey);
           } else if(nodeBottom === surrTop &&
               ((nodeLeft <= surrLeft && surrLeft < nodeRight) ||
               (nodeLeft < surrRight && surrRight <= nodeRight))) {
-            const horizontalEdge = {
-              node: surr,
-              top: nodeBottom,
-              left: Math.max(nodeLeft, surrLeft),
-              right: Math.min(nodeRight, surrRight)
-            } as HorizontalEdge;
-            node.addBottomEdge(horizontalEdge);
+            const left = Math.max(nodeLeft, surrLeft);
+            const edgeKey = `${left}-${nodeBottom}`;
+            if(!(edgeKey in this.horizontalEdges)) {
+              const horizontalEdge = {
+                nodes: [node, surr],
+                top: nodeBottom,
+                left,
+                right: Math.min(nodeRight, surrRight)
+              } as HorizontalEdge;
+              this.horizontalEdges[edgeKey] = horizontalEdge;
+            }
+            node.addBottomEdge(edgeKey);
           } else if(nodeLeft === surrRight &&
               ((nodeTop <= surrTop && surrTop < nodeBottom) ||
               (nodeTop < surrBottom && surrBottom <= nodeBottom))) {
-            const verticalEdge = {
-              node: surr,
-              top: Math.max(nodeTop, surrTop),
-              bottom: Math.min(nodeBottom, surrBottom),
-              left: node.Rectangle.left
-            } as VerticalEdge;
-            node.addLeftEdge(verticalEdge);
+            const edgeKey = `${node.Rectangle.left}-${nodeTop}`;
+            if(!(edgeKey in this.verticalEdges)) {
+              const verticalEdge = {
+                nodes: [surr, node],
+                top: Math.max(nodeTop, surrTop),
+                bottom: Math.min(nodeBottom, surrBottom),
+                left: node.Rectangle.left
+              } as VerticalEdge;
+              this.verticalEdges[edgeKey] = verticalEdge;
+            }
+            node.addLeftEdge(edgeKey);
           } else if(nodeRight === surrLeft &&
               ((nodeTop <= surrTop && surrTop < nodeBottom) ||
               (nodeTop < surrBottom && surrBottom <= nodeBottom))) {
-            const verticalEdge = {
-              node: surr,
-              top: Math.max(nodeTop, surrTop),
-              bottom: Math.min(nodeBottom, surrBottom),
-              left: nodeRight
-            } as VerticalEdge;
-            node.addRightEdge(verticalEdge);
+            const edgeKey = `${surrLeft}-${nodeTop}`;
+            if(!(edgeKey in this.verticalEdges)) {
+              const verticalEdge = {
+                nodes: [node, surr],
+                top: Math.max(nodeTop, surrTop),
+                bottom: Math.min(nodeBottom, surrBottom),
+                left: surrLeft
+              } as VerticalEdge;
+              this.verticalEdges[edgeKey] = verticalEdge;
+            }
+            node.addRightEdge(edgeKey);
           }
         }
       });
@@ -147,5 +167,7 @@ export class LayoutGraph extends Graph {
   }
 
   private nodes: LayoutNode[];
-  private originNodeIndex: number; 
+  private originNodeIndex: number;
+  private horizontalEdges: {[key: string]: HorizontalEdge};
+  private verticalEdges: {[key: string]: VerticalEdge};
 }
