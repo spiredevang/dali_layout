@@ -36,7 +36,18 @@ export class HomePage extends React.Component<Properties, State> {
       <div style={HomePage.STYLE.container}>
         <h1>Layout Application</h1>
         <div style={HomePage.STYLE.toolbar}>
-          <input type='file' onChange={this.onChange}/>
+          <div style={{marginRight: 10}}>
+            <select name='json' onChange={this.onSelectChange}>
+              <option value=''>Select JSON</option>
+              <option value='square_grid.json'>Square Grid</option>
+              <option value='arthur.json'>Arthur</option>
+              <option value='darryl.json'>Darryl</option>
+              <option value='jess.json'>Jess</option>
+              <option value='jon.json'>Jon</option>
+              <option value='test.json'>Test</option>
+            </select>
+          </div>
+          <input type='file' style={{flexGrow: 1}} onChange={this.onFileChange}/>
           <button onClick={layoutHandler}>{buttonText} layout</button>
         </div>
         <div style={HomePage.STYLE.viewerContainer}>
@@ -53,7 +64,7 @@ export class HomePage extends React.Component<Properties, State> {
       </div>);
   }
 
-  private onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  private onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files as any
     const file = files[0];
     if(file.type === 'application/json') {
@@ -63,11 +74,22 @@ export class HomePage extends React.Component<Properties, State> {
     }
   }
 
+  private onSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    if(event.target.value) {
+      const jsonContents = require(`../layouts/${event.target.value}`);
+      this.loadJSONlayout(jsonContents);
+    }
+  }
+
   private onLoad = (event: ProgressEvent<FileReader>) => {
     const contents = event.target?.result as string;
     const jsonContents = JSON.parse(contents);
-    if(Array.isArray(jsonContents?.layout)) {
-      const rectangles = jsonContents.layout.reduce(
+    this.loadJSONlayout(jsonContents)
+  }
+
+  private loadJSONlayout = (object: any) => {
+    if(Array.isArray(object?.layout)) {
+      const rectangles = object.layout.reduce(
         (rectangles: Rectangle[], object: any) => {
           const rectangle = this.getRectangle(object);
           if(rectangle) {
@@ -75,8 +97,10 @@ export class HomePage extends React.Component<Properties, State> {
           }
           return rectangles;
         }, []);
-      this.setState({rectangles});
-      this.layoutGraph = new LayoutGraph(rectangles);
+      if(rectangles) {
+        this.setState({rectangles});
+        this.layoutGraph = new LayoutGraph(rectangles);
+      }
     }
   }
 
@@ -128,8 +152,7 @@ export class HomePage extends React.Component<Properties, State> {
       flexDirection: 'column'
     } as React.CSSProperties,
     toolbar: {
-      display: 'flex',
-      justifyContent: 'space-between'
+      display: 'flex'
     } as React.CSSProperties,
     viewerContainer: {
       display: 'grid',
