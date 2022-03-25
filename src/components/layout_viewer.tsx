@@ -80,6 +80,11 @@ export class LayoutViewer extends React.Component<Properties> {
         return css(extraStyles.rectangle);
       }
     })();
+    const nonUniformStyle = isConstraintUniform && {} || {
+      margin: 1,
+      width: rectangle.width - 2,
+      height: rectangle.height - 2
+    };
     return (
       <div key={index}
           style={{
@@ -88,7 +93,8 @@ export class LayoutViewer extends React.Component<Properties> {
             top: rectangle.top,
             left: rectangle.left,
             width: rectangle.width,
-            height: rectangle.height}}
+            height: rectangle.height,
+            ...nonUniformStyle}}
           className={extraStyle}>
         {rectangle.name}
       </div>);
@@ -108,6 +114,7 @@ export class LayoutViewer extends React.Component<Properties> {
     } as React.CSSProperties,
     basicRectangle: {
       position: 'absolute',
+      border: '1px solid #ffffff',
       display: 'grid',
       placeItems: 'center'
     } as React.CSSProperties
