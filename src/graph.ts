@@ -1,4 +1,4 @@
-import {Rectangle} from './rectangle';
+import {Constraint, Rectangle} from './rectangle';
 
 interface HorizontalEdge {
   nodes: [LayoutNode, LayoutNode];
@@ -75,6 +75,70 @@ export class LayoutNode extends Node {
     return this.leftEdges;
   }
 
+  public get minimumWidth(): number {
+    if(this.rectangle.horizontalPolicy === Constraint.FILL_SPACE) {
+      return 0;
+    } else {
+      return this.rectangle.width;
+    }
+  }
+
+  public get minimumHeight(): number {
+    if(this.rectangle.verticalPolicy === Constraint.FILL_SPACE) {
+      return 0;
+    } else {
+      return this.rectangle.height;
+    }
+  }
+
+  public get maximumWidth(): number {
+    if(this.rectangle.horizontalPolicy === Constraint.FILL_SPACE) {
+      return Infinity;
+    } else {
+      return this.rectangle.width;
+    }
+  }
+
+  public get maximumHeight(): number {
+    if(this.rectangle.verticalPolicy === Constraint.FILL_SPACE) {
+      return Infinity;
+    } else {
+      return this.rectangle.height;
+    }
+  }
+
+  public get compressableWidth(): number {
+    if(this.rectangle.horizontalPolicy === Constraint.FILL_SPACE) {
+      return this.rectangle.width;
+    } else {
+      return 0;
+    }
+  }
+
+  public get compressableHeight(): number {
+    if(this.rectangle.verticalPolicy === Constraint.FILL_SPACE) {
+      return this.rectangle.height;
+    } else {
+      return 0;
+    }
+  }
+
+  public get expandableWidth(): number {
+    if(this.rectangle.horizontalPolicy === Constraint.FILL_SPACE) {
+      return Infinity;
+    } else {
+      return 0;
+    }
+  }
+
+  public get expandableHeight(): number {
+    if(this.rectangle.verticalPolicy === Constraint.FILL_SPACE) {
+      return Infinity;
+    } else {
+      return 0;
+    }
+  }
+
   private rectangle: Rectangle;
   private topEdges: string[];
   private rightEdges: string[];
@@ -93,6 +157,8 @@ export class LayoutGraph extends Graph {
     this.boundaryY = 0;
     this.rowConfiguration = [];
     this.columnConfiguration = [];
+    this.minimum = [0, 0];
+    this.maximum = [Infinity, Infinity];
     this.nodes.forEach((node, nodeIndex) => {
       this.boundaryX = Math.max(node.Rectangle.left + node.Rectangle.width, this.boundaryX);
       this.boundaryY = Math.max(node.Rectangle.top + node.Rectangle.height, this.boundaryY);
@@ -256,6 +322,62 @@ export class LayoutGraph extends Graph {
     return nodeCount !== this.nodes.length ? [] : configuration;
   }
 
+  public getRowConfigurationLimits(configuration: LayoutNode[][]) {
+    const minimumRowWidths = [] as number[];
+    const minimumRowHeights = [] as number[];
+    const maximumRowWidths = [] as number[];
+    const maximumRowHeights = [] as number[];
+    configuration.forEach(row => {
+      let minimumWidth = 0;
+      let minimumHeight = 0;
+      let maximumWidth = 0;
+      let maximumHeight = Infinity;
+      row.forEach(node => {
+        minimumWidth += node.minimumWidth;
+        minimumHeight = Math.max(minimumHeight, node.minimumHeight);
+        maximumWidth += node.maximumWidth;
+        maximumHeight = Math.min(maximumHeight, node.maximumHeight);
+      });
+      minimumRowWidths.push(minimumWidth);
+      minimumRowHeights.push(minimumHeight);
+      maximumRowWidths.push(maximumWidth);
+      maximumRowHeights.push(maximumHeight);
+    });
+    const minimumWidth = Math.max(...minimumRowWidths);
+    const minimumHeight = minimumRowHeights.reduce((sum, height) => sum + height, 0);
+    const maximumWidth = Math.min(...maximumRowWidths);
+    const maximumHeight = maximumRowHeights.reduce((sum, height) => sum + height, 0);
+    return {minimumWidth, minimumHeight, maximumWidth, maximumHeight};
+  }
+
+  public getColumnConfigurationLimits(configuration: LayoutNode[][]) {
+    const minimumColumnWidths = [] as number[];
+    const minimumColumnHeights = [] as number[];
+    const maximumColumnWidths = [] as number[];
+    const maximumColumnHeights = [] as number[];
+    configuration.forEach(column => {
+      let minimumHeight = 0;
+      let minimumWidth = 0;
+      let maximumHeight = 0;
+      let maximumWidth = Infinity;
+      column.forEach(node => {
+        minimumHeight += node.minimumHeight;
+        minimumWidth = Math.max(minimumWidth, node.minimumWidth);
+        maximumHeight += node.maximumHeight;
+        maximumWidth = Math.min(maximumWidth, node.maximumWidth);
+      });
+      minimumColumnHeights.push(minimumHeight);
+      minimumColumnWidths.push(minimumWidth);
+      maximumColumnHeights.push(maximumHeight);
+      maximumColumnWidths.push(maximumWidth);
+    });
+    const minimumHeight = Math.max(...minimumColumnHeights);
+    const minimumWidth = minimumColumnWidths.reduce((sum, width) => sum + width, 0);
+    const maximumHeight = Math.min(...maximumColumnHeights);
+    const maximumWidth = maximumColumnWidths.reduce((sum, width) => sum + width, 0);
+    return {minimumHeight, minimumWidth, maximumHeight, maximumWidth};
+  }
+
   public getNameMatrix(configuration: LayoutNode[][]) {
     return configuration.map(list => list.map(node => node.Rectangle.name));
   }
@@ -264,6 +386,8 @@ export class LayoutGraph extends Graph {
   private originNodeIndex: number;
   private rowConfiguration: LayoutNode[][];
   private columnConfiguration: LayoutNode[][];
+  private minimum: [number, number];
+  private maximum: [number, number];
   private boundaryX: number;
   private boundaryY: number;
   private horizontalEdges: {[key: string]: HorizontalEdge};
