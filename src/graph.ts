@@ -363,7 +363,7 @@ export class LayoutGraph extends Graph {
     });
     const minimumWidth = Math.max(...minimumRowWidths);
     const minimumHeight = minimumRowHeights.reduce((sum, height) => sum + height, 0);
-    const maximumWidth = Math.min(...maximumRowWidths);
+    const maximumWidth = Math.min(...maximumRowWidths, MAX_SIZE);
     const maximumHeight = Math.min(MAX_SIZE,
       maximumRowHeights.reduce((sum, height) => sum + height, 0));
     return {minimumWidth, minimumHeight, maximumWidth, maximumHeight};
@@ -400,7 +400,7 @@ export class LayoutGraph extends Graph {
     });
     const minimumHeight = Math.max(...minimumColumnHeights);
     const minimumWidth = minimumColumnWidths.reduce((sum, width) => sum + width, 0);
-    const maximumHeight = Math.min(...maximumColumnHeights);
+    const maximumHeight = Math.min(...maximumColumnHeights, MAX_SIZE);
     const maximumWidth = Math.min(MAX_SIZE,
       maximumColumnWidths.reduce((sum, width) => sum + width, 0));
     return {minimumHeight, minimumWidth, maximumHeight, maximumWidth};
