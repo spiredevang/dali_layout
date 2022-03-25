@@ -54,8 +54,28 @@ export class HomePage extends React.Component<Properties, State> {
         </div>
         <div style={HomePage.STYLE.viewerContainer}>
           <LayoutViewer rectangles={this.state.rectangles}/>
-          <RectanglesInput rectangles={this.state.rectangles}
-            onUpdate={this.onUpdateRectangles}/>
+          <div style={HomePage.STYLE.rightPanel}>
+            <div style={HomePage.STYLE.limitSpecs}>
+              <div>Minimum width:</div>
+              <div style={HomePage.STYLE.specValue}>
+                {this.layoutGraph.MinimumWidth}
+              </div>
+              <div>Minimum height:</div>
+              <div style={HomePage.STYLE.specValue}>
+                {this.layoutGraph.MinimumHeight}
+              </div>
+              <div>Maximum width:</div>
+              <div style={HomePage.STYLE.specValue}>
+                {this.layoutGraph.MaximumWidth}
+              </div>
+              <div>Maximum height:</div>
+              <div style={HomePage.STYLE.specValue}>
+                {this.layoutGraph.MaximumHeight}
+              </div>
+            </div>
+            <RectanglesInput rectangles={this.state.rectangles}
+              onUpdate={this.onUpdateRectangles}/>
+          </div>
         </div>
         <div style={HomePage.STYLE.popupContainer}>
           {this.state.isPopupDisplayed && (
@@ -162,6 +182,20 @@ export class HomePage extends React.Component<Properties, State> {
       gridTemplateColumns: 'auto 260px',
       alignItems: 'baseline',
       height: 'calc(100vh - 150px)'
+    } as React.CSSProperties,
+    rightPanel: {
+      height: '100%',
+      overflowY: 'auto',
+      display: 'flex',
+      flexDirection: 'column'
+    } as React.CSSProperties,
+    limitSpecs: {
+      margin: '10px 0',
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr'
+    } as React.CSSProperties,
+    specValue: {
+      justifySelf: 'end'
     } as React.CSSProperties,
     popupContainer: {
       position: 'absolute',
