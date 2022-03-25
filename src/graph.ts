@@ -163,6 +163,20 @@ export class LayoutGraph extends Graph {
     this.minimumHeight = 0;
     this.maximumWidth = MAX_SIZE;
     this.maximumHeight = MAX_SIZE;
+    this.generateEdges();
+    this.originNodeIndex = this.nodes.findIndex((node: LayoutNode) =>
+      (node.Rectangle.left === 0) && (node.Rectangle.top === 0));
+    this.rowConfiguration = this.getRowConfiguration();
+    this.columnConfiguration = this.getColumnConfiguration();
+    const rowLimits = this.getRowConfigurationLimits(this.rowConfiguration);
+    const columnLimits = this.getColumnConfigurationLimits(this.columnConfiguration);
+    this.minimumWidth = Math.min(rowLimits.minimumWidth, columnLimits.minimumWidth);
+    this.minimumHeight = Math.min(rowLimits.minimumHeight, columnLimits.minimumHeight);
+    this.maximumWidth = Math.max(rowLimits.maximumWidth, columnLimits.maximumWidth);
+    this.maximumHeight = Math.max(rowLimits.maximumHeight, columnLimits.maximumHeight);
+  }
+
+  private generateEdges() {
     this.nodes.forEach((node, nodeIndex) => {
       this.boundaryX = Math.max(node.Rectangle.left + node.Rectangle.width, this.boundaryX);
       this.boundaryY = Math.max(node.Rectangle.top + node.Rectangle.height, this.boundaryY);
@@ -240,16 +254,6 @@ export class LayoutGraph extends Graph {
         }
       });
     });
-    this.originNodeIndex = this.nodes.findIndex((node: LayoutNode) =>
-      (node.Rectangle.left === 0) && (node.Rectangle.top === 0));
-    this.rowConfiguration = this.getRowConfiguration();
-    this.columnConfiguration = this.getColumnConfiguration();
-    const rowLimits = this.getRowConfigurationLimits(this.rowConfiguration);
-    const columnLimits = this.getColumnConfigurationLimits(this.columnConfiguration);
-    this.minimumWidth = Math.min(rowLimits.minimumWidth, columnLimits.minimumWidth);
-    this.minimumHeight = Math.min(rowLimits.minimumHeight, columnLimits.minimumHeight);
-    this.maximumWidth = Math.max(rowLimits.maximumWidth, columnLimits.maximumWidth);
-    this.maximumHeight = Math.max(rowLimits.maximumHeight, columnLimits.maximumHeight);
   }
 
   public getRowConfiguration(): LayoutNode[][] {
