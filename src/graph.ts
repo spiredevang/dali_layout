@@ -16,6 +16,20 @@ interface VerticalEdge {
   left: number;
 }
 
+interface Limits {
+  minimumWidth: number;
+  minimumHeight: number;
+  maximumWidth: number;
+  maximumHeight: number;
+}
+
+const baseLimits = {
+  minimumWidth: 0,
+  minimumHeight: 0,
+  maximumWidth: MAX_SIZE,
+  maximumHeight: MAX_SIZE
+}
+
 abstract class Graph {};
 
 abstract class Node {
@@ -163,6 +177,8 @@ export class LayoutGraph extends Graph {
     this.boundaryY = 0;
     this.rowConfiguration = [];
     this.columnConfiguration = [];
+    this.rowLimits = baseLimits;
+    this.columnLimits = baseLimits;
     this.minimumWidth = 0;
     this.minimumHeight = 0;
     this.maximumWidth = MAX_SIZE;
@@ -170,12 +186,12 @@ export class LayoutGraph extends Graph {
     this.generateEdges();
     this.rowConfiguration = this.getRowConfiguration();
     this.columnConfiguration = this.getColumnConfiguration();
-    const rowLimits = this.getRowConfigurationLimits(this.rowConfiguration);
-    const columnLimits = this.getColumnConfigurationLimits(this.columnConfiguration);
-    this.minimumWidth = Math.min(rowLimits.minimumWidth, columnLimits.minimumWidth);
-    this.minimumHeight = Math.min(rowLimits.minimumHeight, columnLimits.minimumHeight);
-    this.maximumWidth = Math.max(rowLimits.maximumWidth, columnLimits.maximumWidth);
-    this.maximumHeight = Math.max(rowLimits.maximumHeight, columnLimits.maximumHeight);
+    this.rowLimits = this.getRowConfigurationLimits(this.rowConfiguration);
+    this.columnLimits = this.getColumnConfigurationLimits(this.columnConfiguration);
+    this.minimumWidth = Math.min(this.rowLimits.minimumWidth, this.columnLimits.minimumWidth);
+    this.minimumHeight = Math.min(this.rowLimits.minimumHeight, this.columnLimits.minimumHeight);
+    this.maximumWidth = Math.max(this.rowLimits.maximumWidth, this.columnLimits.maximumWidth);
+    this.maximumHeight = Math.max(this.rowLimits.maximumHeight, this.columnLimits.maximumHeight);
   }
 
   private generateEdges() {
@@ -441,6 +457,8 @@ export class LayoutGraph extends Graph {
   private nodesObject: {[key: string]: LayoutNode};
   private rowConfiguration: string[][];
   private columnConfiguration: string[][];
+  private rowLimits: Limits;
+  private columnLimits: Limits;
   private minimumWidth: number;
   private minimumHeight: number;
   private maximumWidth: number;
