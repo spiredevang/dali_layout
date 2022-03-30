@@ -295,13 +295,14 @@ export class LayoutGraph extends Graph {
     let leftNodes = ['0-0'];
     let currentNode = originNode;
     while(currentNode?.BottomEdges.length) {
-      const currentNodeKey = this.horizontalEdges[currentNode.BottomEdges[0]].nodes[1];
-      currentNode = this.nodesObject[currentNodeKey];
       if(currentNode.RightEdges.length > 1) {
         leftNodes = [];
         break;
       } else {
+        const [currentNodeKey, bottomNodeKey] = this.horizontalEdges[
+          currentNode.BottomEdges[0]].nodes;
         leftNodes.push(currentNodeKey);
+        currentNode = this.nodesObject[bottomNodeKey];
       }
     }
     let nodeCount = 0;
@@ -328,13 +329,14 @@ export class LayoutGraph extends Graph {
     let topNodes = ['0-0'];
     let currentNode = originNode;
     while(currentNode?.RightEdges.length) {
-      const currentNodeKey = this.verticalEdges[currentNode.RightEdges[0]].nodes[1];
-      currentNode = this.nodesObject[currentNodeKey];
       if(currentNode.BottomEdges.length > 1) {
         topNodes = [];
         break;
       } else {
+        const [currentNodeKey, rightNodeKey] = this.verticalEdges[
+          currentNode.RightEdges[0]].nodes;
         topNodes.push(currentNodeKey);
+        currentNode = this.nodesObject[rightNodeKey];
       }
     }
     let nodeCount = 0;
@@ -455,13 +457,14 @@ export class LayoutGraph extends Graph {
         const row = [nodeKey];
         let currentNode = this.nodesObject[nodeKey];
         while(currentNode.RightEdges.length) {
-          const rightEdgeKey = currentNode.RightEdges.find(nodeKey =>
+          const rightEdgeNodeKeys = currentNode.RightEdges.map(edgeKey =>
+            this.verticalEdges[edgeKey].nodes[1]);
+          const rightEdgeNodeKey = rightEdgeNodeKeys.find(nodeKey =>
             !(nodeKey in visitedNodes));
-          if(rightEdgeKey) {
-            const rightNodeKey = this.verticalEdges[rightEdgeKey].nodes[1]
-            row.push(rightNodeKey);
-            visitedNodes[rightNodeKey] = true;
-            currentNode = this.nodesObject[rightNodeKey];
+          if(rightEdgeNodeKey) {
+            row.push(rightEdgeNodeKey);
+            visitedNodes[rightEdgeNodeKey] = true;
+            currentNode = this.nodesObject[rightEdgeNodeKey];
           } else {
             break;
           }
@@ -562,13 +565,14 @@ export class LayoutGraph extends Graph {
         const column = [nodeKey];
         let currentNode = this.nodesObject[nodeKey];
         while(currentNode.BottomEdges.length) {
-          const bottomEdgeKey = currentNode.BottomEdges.find(nodeKey =>
+          const bottomEdgeNodeKeys = currentNode.BottomEdges.map(edgeKey =>
+            this.horizontalEdges[edgeKey].nodes[1]);
+          const bottomEdgeNodeKey = bottomEdgeNodeKeys.find(nodeKey =>
             !(nodeKey in visitedNodes));
-          if(bottomEdgeKey) {
-            const bottomNodeKey = this.horizontalEdges[bottomEdgeKey].nodes[1]
-            column.push(bottomNodeKey);
-            visitedNodes[bottomNodeKey] = true;
-            currentNode = this.nodesObject[bottomNodeKey];
+          if(bottomEdgeNodeKey) {
+            column.push(bottomEdgeNodeKey);
+            visitedNodes[bottomEdgeNodeKey] = true;
+            currentNode = this.nodesObject[bottomEdgeNodeKey];
           } else {
             break;
           }
