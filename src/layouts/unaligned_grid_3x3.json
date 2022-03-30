@@ -1,0 +1,85 @@
+{
+  "layout": [
+    {
+      "name": "A",
+      "width": 200,
+      "height": 400,
+      "left": 0,
+      "top": 0,
+      "horizontalPolicy": "fixed",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "B",
+      "width": 200,
+      "height": 400,
+      "left": 200,
+      "top": 0,
+      "horizontalPolicy": "fixed",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "C",
+      "width": 250,
+      "height": 250,
+      "left": 0,
+      "top": 400,
+      "horizontalPolicy": "fixed",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "D",
+      "width": 200,
+      "height": 250,
+      "left": 400,
+      "top": 300,
+      "horizontalPolicy": "fixed",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "E",
+      "width": 150,
+      "height": 200,
+      "left": 250,
+      "top": 550,
+      "horizontalPolicy": "fixed",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "F",
+      "width": 200,
+      "height": 200,
+      "left": 400,
+      "top": 550,
+      "horizontalPolicy": "fixed",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "X1",
+      "width": 200,
+      "height": 300,
+      "left": 400,
+      "top": 0,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fill_space"
+    },
+    {
+      "name": "X2",
+      "width": 150,
+      "height": 150,
+      "left": 250,
+      "top": 400,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fill_space"
+    },
+    {
+      "name": "X3",
+      "width": 250,
+      "height": 100,
+      "left": 0,
+      "top": 650,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fill_space"
+    }
+  ]
+}
