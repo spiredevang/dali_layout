@@ -287,12 +287,13 @@ export class LayoutGraph extends Graph {
     let leftNodes = ['0-0'];
     let currentNode = originNode;
     while(currentNode?.BottomEdges.length) {
-      currentNode = this.nodesObject[this.horizontalEdges[currentNode.BottomEdges[0]].nodes[1]];
+      const currentNodeKey = this.horizontalEdges[currentNode.BottomEdges[0]].nodes[1];
+      currentNode = this.nodesObject[currentNodeKey];
       if(currentNode.RightEdges.length > 1) {
         leftNodes = [];
         break;
       } else {
-        leftNodes.push(`${currentNode.Rectangle.left}-${currentNode.Rectangle.top}`);
+        leftNodes.push(currentNodeKey);
       }
     }
     let nodeCount = 0;
@@ -300,8 +301,9 @@ export class LayoutGraph extends Graph {
       const row = [leftNode];
       currentNode = this.nodesObject[leftNode];
       while(currentNode?.RightEdges.length) {
-        currentNode = this.nodesObject[this.verticalEdges[currentNode.RightEdges[0]].nodes[1]];
-        row.push(`${currentNode.Rectangle.left}-${currentNode.Rectangle.top}`);
+        const currentNodeKey = this.verticalEdges[currentNode.RightEdges[0]].nodes[1];
+        currentNode = this.nodesObject[currentNodeKey];
+        row.push(currentNodeKey);
       }
       nodeCount += row.length;
       configuration.push(row);
@@ -318,12 +320,13 @@ export class LayoutGraph extends Graph {
     let topNodes = ['0-0'];
     let currentNode = originNode;
     while(currentNode?.RightEdges.length) {
-      currentNode = this.nodesObject[this.verticalEdges[currentNode.RightEdges[0]].nodes[1]];
+      const currentNodeKey = this.verticalEdges[currentNode.RightEdges[0]].nodes[1];
+      currentNode = this.nodesObject[currentNodeKey];
       if(currentNode.BottomEdges.length > 1) {
         topNodes = [];
         break;
       } else {
-        topNodes.push(`${currentNode.Rectangle.left}-${currentNode.Rectangle.top}`);
+        topNodes.push(currentNodeKey);
       }
     }
     let nodeCount = 0;
@@ -331,8 +334,9 @@ export class LayoutGraph extends Graph {
       const column = [topNode];
       currentNode = this.nodesObject[topNode];
       while(currentNode?.BottomEdges.length) {
-        currentNode = this.nodesObject[this.horizontalEdges[currentNode.BottomEdges[0]].nodes[1]];
-        column.push(`${currentNode.Rectangle.left}-${currentNode.Rectangle.top}`);
+        const currentNodeKey = this.horizontalEdges[currentNode.BottomEdges[0]].nodes[1];
+        currentNode = this.nodesObject[currentNodeKey];
+        column.push(currentNodeKey);
       }
       nodeCount += column.length;
       configuration.push(column);
