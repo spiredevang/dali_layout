@@ -10,6 +10,8 @@ interface Properties {}
 
 interface State {
   rectangles: Rectangle[];
+  resizedRectangles: Rectangle[];
+  showOriginalRectangles: boolean;
   isPopupDisplayed: boolean;
 }
 
@@ -19,6 +21,8 @@ export class HomePage extends React.Component<Properties, State> {
     super(props)
     this.state = {
       rectangles: [],
+      resizedRectangles: [],
+      showOriginalRectangles: true,
       isPopupDisplayed: false
     };
     this.layoutGraph = new LayoutGraph([]);
@@ -32,6 +36,8 @@ export class HomePage extends React.Component<Properties, State> {
         return {layoutHandler: this.onOpenLayoutPopup, buttonText: 'Open'};
       }
     })();
+    const displayedRectangles = this.state.showOriginalRectangles &&
+      this.state.rectangles || this.state.resizedRectangles;
     return (
       <div style={HomePage.STYLE.container}>
         <h1>Layout Application</h1>
@@ -50,10 +56,15 @@ export class HomePage extends React.Component<Properties, State> {
             </select>
           </div>
           <input type='file' style={{flexGrow: 1}} onChange={this.onFileChange}/>
+          {this.state.resizedRectangles.length > 0 &&
+            <button onClick={this.toggleResizedLayout}
+                style={{marginRight: 50}}>
+              Toggle resized layout
+            </button>}
           <button onClick={layoutHandler}>{buttonText} layout</button>
         </div>
         <div style={HomePage.STYLE.viewerContainer}>
-          <LayoutViewer rectangles={this.state.rectangles}/>
+          <LayoutViewer rectangles={displayedRectangles}/>
           <div style={HomePage.STYLE.rightPanel}>
             <div style={HomePage.STYLE.limitSpecs}>
               <div>Minimum width:</div>
@@ -73,8 +84,9 @@ export class HomePage extends React.Component<Properties, State> {
                 {this.layoutGraph.MaximumHeight}
               </div>
             </div>
-            <RectanglesInput rectangles={this.state.rectangles}
-              onUpdate={this.onUpdateRectangles}/>
+            {this.state.showOriginalRectangles &&
+              <RectanglesInput rectangles={this.state.rectangles}
+                onUpdate={this.onUpdateRectangles}/>}
           </div>
         </div>
         <div style={HomePage.STYLE.popupContainer}>
@@ -120,8 +132,10 @@ export class HomePage extends React.Component<Properties, State> {
           return rectangles;
         }, []);
       if(rectangles) {
-        this.setState({rectangles});
         this.layoutGraph = new LayoutGraph(rectangles);
+        const resizedRectangles = this.layoutGraph.ResizedRows.length &&
+          this.layoutGraph.ResizedRows || this.layoutGraph.ResizedColumns;
+        this.setState({rectangles, resizedRectangles});
       }
     }
   }
@@ -162,6 +176,10 @@ export class HomePage extends React.Component<Properties, State> {
       <div style={HomePage.STYLE.layoutPopup}>
         layout pop
       </div>);
+  }
+
+  private toggleResizedLayout = () => {
+    this.setState({showOriginalRectangles: !this.state.showOriginalRectangles});
   }
 
   private static readonly STYLE = {
