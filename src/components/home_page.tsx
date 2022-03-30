@@ -51,6 +51,8 @@ export class HomePage extends React.Component<Properties, State> {
               <option value='square_grid_3x3.json'>Square Grid (3x3)</option>
               <option value='short_grid_3x3.json'>Short Grid (3x3)</option>
               <option value='narrow_grid_3x3.json'>Narrow Grid (3x3)</option>
+              <option value='long_grid_3x3.json'>Long Grid (3x3)</option>
+              <option value='wide_grid_3x3.json'>Wide Grid (3x3)</option>
               <option value='arthur.json'>Arthur</option>
               <option value='darryl.json'>Darryl</option>
               <option value='jess.json'>Jess</option>
