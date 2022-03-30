@@ -295,7 +295,7 @@ export class LayoutGraph extends Graph {
     let leftNodes = ['0-0'];
     let currentNode = originNode;
     while(currentNode?.BottomEdges.length) {
-      if(currentNode.RightEdges.length > 1) {
+      if(!this.isRightNodeAligned(currentNode)) {
         leftNodes = [];
         break;
       } else {
@@ -320,6 +320,25 @@ export class LayoutGraph extends Graph {
     return nodeCount !== Object.keys(this.nodesObject).length ? [] : configuration;
   }
 
+  private isRightNodeAligned(currentNode: LayoutNode) {
+    if(currentNode.RightEdges.length === 0) {
+      return true;
+    } else if(currentNode.RightEdges.length > 1) {
+      return false;
+    }
+    const rightEdge = this.verticalEdges[currentNode.RightEdges[0]];
+    const rightNode = this.nodesObject[rightEdge.nodes[1]];
+    const currTop = currentNode.Rectangle.top;
+    const currBottom = currentNode.Rectangle.top + currentNode.Rectangle.height;
+    const rightTop = rightNode.Rectangle.top;
+    const rightBottom = rightNode.Rectangle.top + rightNode.Rectangle.height;
+    if(currTop === rightTop && currBottom === rightBottom) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   public getColumnConfiguration(): string[][] {
     const originNode = this.nodesObject['0-0'];
     if(!originNode) {
@@ -329,7 +348,7 @@ export class LayoutGraph extends Graph {
     let topNodes = ['0-0'];
     let currentNode = originNode;
     while(currentNode?.RightEdges.length) {
-      if(currentNode.BottomEdges.length > 1) {
+      if(!this.isBottomNodeAligned(currentNode)) {
         topNodes = [];
         break;
       } else {
@@ -352,6 +371,25 @@ export class LayoutGraph extends Graph {
       configuration.push(column);
     });
     return nodeCount !== Object.keys(this.nodesObject).length ? [] : configuration;
+  }
+
+  private isBottomNodeAligned(currentNode: LayoutNode) {
+    if(currentNode.BottomEdges.length === 0) {
+      return true;
+    } else if(currentNode.BottomEdges.length > 1) {
+      return false;
+    }
+    const bottomEdge = this.horizontalEdges[currentNode.BottomEdges[0]];
+    const bottomNode = this.nodesObject[bottomEdge.nodes[1]];
+    const currLeft = currentNode.Rectangle.left;
+    const currRight = currentNode.Rectangle.left + currentNode.Rectangle.width;
+    const bottomLeft = bottomNode.Rectangle.left;
+    const bottomRight = bottomNode.Rectangle.left + bottomNode.Rectangle.width;
+    if(currLeft === bottomLeft && currRight === bottomRight) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public getRowConfigurationLimits(configuration: string[][]) {
