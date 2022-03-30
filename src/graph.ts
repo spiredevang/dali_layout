@@ -177,6 +177,8 @@ export class LayoutGraph extends Graph {
     this.boundaryY = 0;
     this.rowConfiguration = [];
     this.columnConfiguration = [];
+    this.resizedRows = [];
+    this.resizedColumns = [];
     this.rowLimits = baseLimits;
     this.columnLimits = baseLimits;
     this.minimumWidth = 0;
@@ -192,6 +194,12 @@ export class LayoutGraph extends Graph {
     this.minimumHeight = Math.min(this.rowLimits.minimumHeight, this.columnLimits.minimumHeight);
     this.maximumWidth = Math.max(this.rowLimits.maximumWidth, this.columnLimits.maximumWidth);
     this.maximumHeight = Math.max(this.rowLimits.maximumHeight, this.columnLimits.maximumHeight);
+    if(!this.rowConfiguration.length) {
+      this.fixUnalignedRows();
+    }
+    if(!this.columnConfiguration.length) {
+      this.fixUnalignedColumns();
+    }
   }
 
   private generateEdges() {
@@ -418,6 +426,220 @@ export class LayoutGraph extends Graph {
     return {minimumHeight, minimumWidth, maximumHeight, maximumWidth};
   }
 
+  public fixUnalignedRows() {
+    const unalignedRows = this.getUnalignedRows();
+    const alignedRows = this.getResizedRows(unalignedRows);
+    this.resizedRows = alignedRows;
+  }
+
+  public getUnalignedRows() {
+    const originNode = this.nodesObject['0-0'];
+    if(!originNode) {
+      return [];
+    }
+    const leftNodes = (() => {
+      const nodeKeys = ['0-0'];
+      let currentNode = originNode;
+      while(currentNode?.BottomEdges.length) {
+        const currentNodeKey = this.horizontalEdges[currentNode.BottomEdges[0]].nodes[1];
+        currentNode = this.nodesObject[currentNodeKey];
+        nodeKeys.push(currentNodeKey);
+      }
+      return nodeKeys;
+    })();
+    const rowConfiguration = [] as string[][];
+    if(leftNodes.length) {
+      const visitedNodes = {} as {[key: string]: boolean};
+      leftNodes.forEach(nodeKey => {
+        visitedNodes[nodeKey] = true;
+        const row = [nodeKey];
+        let currentNode = this.nodesObject[nodeKey];
+        while(currentNode.RightEdges.length) {
+          const rightEdgeKey = currentNode.RightEdges.find(nodeKey =>
+            !(nodeKey in visitedNodes));
+          if(rightEdgeKey) {
+            const rightNodeKey = this.verticalEdges[rightEdgeKey].nodes[1]
+            row.push(rightNodeKey);
+            visitedNodes[rightNodeKey] = true;
+            currentNode = this.nodesObject[rightNodeKey];
+          } else {
+            break;
+          }
+        }
+        rowConfiguration.push(row);
+      });
+      if(Object.keys(visitedNodes).length === Object.keys(this.nodesObject).length) {
+        return rowConfiguration;
+      }
+    }
+    return [];
+  }
+
+  public getResizedRows(rows: string[][]) {
+    const updatedRectangles = [] as Rectangle[];
+    let top = 0;
+    const minimumRowWidths = [];
+    const maximumRowWidths = [];
+    for(let i = 0; i < rows.length; ++i) {
+      const nodeRow = rows[i].map(nodeKey => this.nodesObject[nodeKey]);
+      let fixedHeight = 0;
+      let areFixedHeightsEqual = true;
+      let minimumFlexibleHeight = MAX_SIZE;
+      let minimumWidth = 0;
+      let maximumWidth = 0;
+      let compressableWidth = 0;
+      for(let j = 0; j < nodeRow.length; ++j) {
+        compressableWidth += nodeRow[j].compressableWidth;
+        minimumWidth += nodeRow[j].minimumWidth;
+        maximumWidth += nodeRow[j].maximumWidth;
+        if(nodeRow[j].Rectangle.verticalPolicy === Constraint.FIXED) {
+          if(fixedHeight === 0) {
+            fixedHeight = nodeRow[j].Rectangle.height;
+          } else if(fixedHeight !== nodeRow[j].Rectangle.height) {
+            areFixedHeightsEqual = false;
+            break;
+          }
+        } else if(nodeRow[j].Rectangle.verticalPolicy === Constraint.FILL_SPACE) {
+          minimumFlexibleHeight = Math.min(minimumFlexibleHeight, nodeRow[j].Rectangle.height)
+        }
+      };
+      if(!areFixedHeightsEqual || !compressableWidth) {
+        break;
+      }
+      const rectRow = [] as Rectangle[];
+      const rowHeight = fixedHeight || minimumFlexibleHeight;
+      let left = 0;
+      nodeRow.forEach(node => {
+        const rect = {...node.Rectangle, top, left, height: rowHeight};
+        rectRow.push(rect);
+        left += rect.width;
+      });
+      top += rowHeight;
+      if(rectRow.length === rows[i].length) {
+        updatedRectangles.push(...rectRow);
+        minimumRowWidths.push(minimumWidth);
+        maximumRowWidths.push(maximumWidth);
+      } else {
+        break;
+      }
+    }
+    if(updatedRectangles.length &&
+        updatedRectangles.length === Object.keys(this.nodesObject).length) {
+      this.minimumWidth = Math.max(...minimumRowWidths);
+      this.maximumWidth = Math.min(MAX_SIZE, ...maximumRowWidths);
+      return updatedRectangles;
+    } else {
+      return [];
+    }
+  }
+
+  public fixUnalignedColumns() {
+    const unalignedColumns = this.getUnalignedColumns();
+    const alignedColumns = this.getResizedColumns(unalignedColumns);
+    this.resizedColumns = alignedColumns;
+  }
+
+  public getUnalignedColumns() {
+    const originNode = this.nodesObject['0-0'];
+    if(!originNode) {
+      return [];
+    }
+    const topNodes = (() => {
+      const nodeKeys = ['0-0'];
+      let currentNode = originNode;
+      while(currentNode?.RightEdges.length) {
+        const currentNodeKey = this.verticalEdges[currentNode.RightEdges[0]].nodes[1];
+        currentNode = this.nodesObject[currentNodeKey];
+        nodeKeys.push(currentNodeKey);
+      }
+      return nodeKeys;
+    })();
+    const columnConfiguration = [] as string[][];
+    if(topNodes.length) {
+      const visitedNodes = {} as {[key: string]: boolean};
+      topNodes.forEach(nodeKey => {
+        visitedNodes[nodeKey] = true;
+        const column = [nodeKey];
+        let currentNode = this.nodesObject[nodeKey];
+        while(currentNode.BottomEdges.length) {
+          const bottomEdgeKey = currentNode.BottomEdges.find(nodeKey =>
+            !(nodeKey in visitedNodes));
+          if(bottomEdgeKey) {
+            const bottomNodeKey = this.horizontalEdges[bottomEdgeKey].nodes[1]
+            column.push(bottomNodeKey);
+            visitedNodes[bottomNodeKey] = true;
+            currentNode = this.nodesObject[bottomNodeKey];
+          } else {
+            break;
+          }
+        }
+        columnConfiguration.push(column);
+      });
+      if(Object.keys(visitedNodes).length === Object.keys(this.nodesObject).length) {
+        return columnConfiguration;
+      }
+    }
+    return [];
+  }
+
+  public getResizedColumns(columns: string[][]) {
+    const updatedRectangles = [] as Rectangle[];
+    let left = 0;
+    const minimumColumnHeights = [];
+    const maximumColumnHeights = [];
+    for(let i = 0; i < columns.length; ++i) {
+      const nodeColumn = columns[i].map(nodeKey => this.nodesObject[nodeKey]);
+      let fixedWidth = 0;
+      let areFixedWidthsEqual = true;
+      let minimumFlexibleWidth = MAX_SIZE;
+      let minimumHeight = 0;
+      let maximumHeight = 0;
+      let compressableHeight = 0;
+      for(let j = 0; j < nodeColumn.length; ++j) {
+        compressableHeight += nodeColumn[j].compressableHeight;
+        minimumHeight += nodeColumn[j].minimumHeight;
+        maximumHeight += nodeColumn[j].maximumHeight;
+        if(nodeColumn[j].Rectangle.horizontalPolicy === Constraint.FIXED) {
+          if(fixedWidth === 0) {
+            fixedWidth = nodeColumn[j].Rectangle.width;
+          } else if(fixedWidth !== nodeColumn[j].Rectangle.width) {
+            areFixedWidthsEqual = false;
+            break;
+          }
+        } else if(nodeColumn[j].Rectangle.horizontalPolicy === Constraint.FILL_SPACE) {
+          minimumFlexibleWidth = Math.min(minimumFlexibleWidth, nodeColumn[j].Rectangle.width)
+        }
+      };
+      if(!areFixedWidthsEqual || !compressableHeight) {
+        break;
+      }
+      const rectColumn = [] as Rectangle[];
+      const columnWidth = fixedWidth || minimumFlexibleWidth;
+      let top = 0;
+      nodeColumn.forEach(node => {
+        const rect = {...node.Rectangle, left, top, width: columnWidth};
+        rectColumn.push(rect);
+        top += rect.height;
+      });
+      left += columnWidth;
+      if(rectColumn.length === columns[i].length) {
+        updatedRectangles.push(...rectColumn);
+        minimumColumnHeights.push(minimumHeight);
+        maximumColumnHeights.push(maximumHeight);
+      } else {
+        break;
+      }
+    }
+    if(updatedRectangles.length &&
+        updatedRectangles.length === Object.keys(this.nodesObject).length) {
+      this.minimumHeight = Math.max(...minimumColumnHeights);
+      this.maximumHeight = Math.min(MAX_SIZE, ...maximumColumnHeights);
+      return updatedRectangles;
+    } else {
+      return [];
+    }
+  }
+
   public getNameMatrix(configuration: LayoutNode[][]) {
     return configuration.map(list => list.map(node => node.Rectangle.name));
   }
@@ -438,9 +660,19 @@ export class LayoutGraph extends Graph {
     return this.maximumHeight;
   }
 
+  public get ResizedRows(): Rectangle[] {
+    return this.resizedRows;
+  }
+
+  public get ResizedColumns(): Rectangle[] {
+    return this.resizedColumns;
+  }
+
   private nodesObject: {[key: string]: LayoutNode};
   private rowConfiguration: string[][];
   private columnConfiguration: string[][];
+  private resizedRows: Rectangle[];
+  private resizedColumns: Rectangle[];
   private rowLimits: Limits;
   private columnLimits: Limits;
   private minimumWidth: number;
