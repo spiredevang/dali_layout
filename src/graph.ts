@@ -3,14 +3,14 @@ import {Constraint, Rectangle} from './rectangle';
 const MAX_SIZE = 2**24;
 
 interface HorizontalEdge {
-  nodes: [LayoutNode, LayoutNode];
+  nodes: [string, string];
   left: number;
   right: number;
   top: number;
 }
 
 interface VerticalEdge {
-  nodes: [LayoutNode, LayoutNode];
+  nodes: [string, string];
   top: number;
   bottom: number;
   left: number;
@@ -215,7 +215,7 @@ export class LayoutGraph extends Graph {
             const edgeKey = `${left}-${nodeTop}`;
             if(!(edgeKey in this.horizontalEdges)) {
               const horizontalEdge = {
-                nodes: [surr, node],
+                nodes: [surrKey, nodeKey],
                 top: nodeTop,
                 left,
                 right: Math.min(nodeRight, surrRight)
@@ -230,7 +230,7 @@ export class LayoutGraph extends Graph {
             const edgeKey = `${left}-${nodeBottom}`;
             if(!(edgeKey in this.horizontalEdges)) {
               const horizontalEdge = {
-                nodes: [node, surr],
+                nodes: [nodeKey, surrKey],
                 top: nodeBottom,
                 left,
                 right: Math.min(nodeRight, surrRight)
@@ -245,7 +245,7 @@ export class LayoutGraph extends Graph {
             const edgeKey = `${node.Rectangle.left}-${top}`;
             if(!(edgeKey in this.verticalEdges)) {
               const verticalEdge = {
-                nodes: [surr, node],
+                nodes: [surrKey, nodeKey],
                 top,
                 bottom: Math.min(nodeBottom, surrBottom),
                 left: node.Rectangle.left
@@ -260,7 +260,7 @@ export class LayoutGraph extends Graph {
             const edgeKey = `${surrLeft}-${top}`;
             if(!(edgeKey in this.verticalEdges)) {
               const verticalEdge = {
-                nodes: [node, surr],
+                nodes: [nodeKey, surrKey],
                 top,
                 bottom: Math.min(nodeBottom, surrBottom),
                 left: surrLeft
@@ -271,6 +271,10 @@ export class LayoutGraph extends Graph {
           }
         }
       });
+      node.TopEdges.sort();
+      node.RightEdges.sort();
+      node.BottomEdges.sort();
+      node.LeftEdges.sort();
     });
   }
 
@@ -283,19 +287,7 @@ export class LayoutGraph extends Graph {
     let leftNodes = ['0-0'];
     let currentNode = originNode;
     while(currentNode?.BottomEdges.length) {
-      currentNode = (() => {
-        if(currentNode.BottomEdges.length === 1) {
-          return this.horizontalEdges[currentNode.BottomEdges[0]].nodes[1];
-        } else {
-          const leftEdgeIndex = currentNode.BottomEdges.reduce(
-            (prevEdgeKey, edgeKey) => {
-              const prevKeyX = prevEdgeKey.split('-')[0];
-              const edgeKeyX = edgeKey.split('-')[0];
-              return edgeKeyX < prevKeyX ? edgeKey : prevEdgeKey;
-          });
-          return this.horizontalEdges[leftEdgeIndex].nodes[1];
-        }
-      })();
+      currentNode = this.nodesObject[this.horizontalEdges[currentNode.BottomEdges[0]].nodes[1]];
       if(currentNode.RightEdges.length > 1) {
         leftNodes = [];
         break;
@@ -308,7 +300,7 @@ export class LayoutGraph extends Graph {
       const row = [leftNode];
       currentNode = this.nodesObject[leftNode];
       while(currentNode?.RightEdges.length) {
-        currentNode = this.verticalEdges[currentNode.RightEdges[0]].nodes[1];
+        currentNode = this.nodesObject[this.verticalEdges[currentNode.RightEdges[0]].nodes[1]];
         row.push(`${currentNode.Rectangle.left}-${currentNode.Rectangle.top}`);
       }
       nodeCount += row.length;
@@ -326,19 +318,7 @@ export class LayoutGraph extends Graph {
     let topNodes = ['0-0'];
     let currentNode = originNode;
     while(currentNode?.RightEdges.length) {
-      currentNode = (() => {
-        if(currentNode.RightEdges.length === 1) {
-          return this.verticalEdges[currentNode.RightEdges[0]].nodes[1];
-        } else {
-          const topEdgeIndex = currentNode.RightEdges.reduce(
-            (prevEdgeKey, edgeKey) => {
-              const prevKeyY = prevEdgeKey.split('-')[1];
-              const edgeKeyY = edgeKey.split('-')[1];
-              return edgeKeyY < prevKeyY ? edgeKey : prevEdgeKey;
-          });
-          return this.verticalEdges[topEdgeIndex].nodes[1];
-        }
-      })();
+      currentNode = this.nodesObject[this.verticalEdges[currentNode.RightEdges[0]].nodes[1]];
       if(currentNode.BottomEdges.length > 1) {
         topNodes = [];
         break;
@@ -351,7 +331,7 @@ export class LayoutGraph extends Graph {
       const column = [topNode];
       currentNode = this.nodesObject[topNode];
       while(currentNode?.BottomEdges.length) {
-        currentNode = this.horizontalEdges[currentNode.BottomEdges[0]].nodes[1];
+        currentNode = this.nodesObject[this.horizontalEdges[currentNode.BottomEdges[0]].nodes[1]];
         column.push(`${currentNode.Rectangle.left}-${currentNode.Rectangle.top}`);
       }
       nodeCount += column.length;
