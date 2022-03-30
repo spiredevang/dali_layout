@@ -1,0 +1,40 @@
+{
+  "layout": [
+    {
+      "name": "A",
+      "width": 100,
+      "height": 100,
+      "left": 0,
+      "top": 0,
+      "horizontalPolicy": "fixed",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "B",
+      "width": 100,
+      "height": 100,
+      "left": 100,
+      "top": 100,
+      "horizontalPolicy": "fixed",
+      "verticalPolicy": "fixed"
+    },
+    {
+      "name": "X1",
+      "width": 100,
+      "height": 100,
+      "left": 100,
+      "top": 0,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fill_space"
+    },
+    {
+      "name": "X2",
+      "width": 100,
+      "height": 100,
+      "left": 0,
+      "top": 100,
+      "horizontalPolicy": "fill_space",
+      "verticalPolicy": "fill_space"
+    }
+  ]
+}

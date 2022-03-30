@@ -45,9 +45,12 @@ export class HomePage extends React.Component<Properties, State> {
           <div style={{marginRight: 10}}>
             <select name='json' onChange={this.onSelectChange}>
               <option value=''>Select JSON</option>
-              <option value='square_grid.json'>Square Grid</option>
-              <option value='short_grid.json'>Short Grid</option>
-              <option value='narrow_grid.json'>Narrow Grid</option>
+              <option value='square_grid_2x2.json'>Square Grid (2x2)</option>
+              <option value='short_grid_2x2.json'>Short Grid (2x2)</option>
+              <option value='narrow_grid_2x2.json'>Narrow Grid (2x2)</option>
+              <option value='square_grid_3x3.json'>Square Grid (3x3)</option>
+              <option value='short_grid_3x3.json'>Short Grid (3x3)</option>
+              <option value='narrow_grid_3x3.json'>Narrow Grid (3x3)</option>
               <option value='arthur.json'>Arthur</option>
               <option value='darryl.json'>Darryl</option>
               <option value='jess.json'>Jess</option>
