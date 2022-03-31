@@ -287,30 +287,28 @@ export class LayoutGraph extends Graph {
   }
 
   public getRowConfiguration(): string[][] {
-    const originNode = this.nodesObject['0-0'];
-    if(!originNode) {
+    if(!this.nodesObject['0-0']) {
       return [];
     }
-    const configuration = [] as string[][];
-    let leftNodes = ['0-0'];
-    let currentNode = originNode;
-    while(currentNode?.BottomEdges.length) {
-      if(!this.isRightNodeAligned(currentNode)) {
+    let leftNodes = [];
+    let currentNodeKey = '0-0';
+    while(currentNodeKey) {
+      const currentNode = this.nodesObject[currentNodeKey];
+      if(this.isRightNodeAligned(currentNode)) {
+        leftNodes.push(currentNodeKey);
+        currentNodeKey = this.horizontalEdges[currentNode.BottomEdges[0]]?.nodes[1];
+      } else {
         leftNodes = [];
         break;
-      } else {
-        const [currentNodeKey, bottomNodeKey] = this.horizontalEdges[
-          currentNode.BottomEdges[0]].nodes;
-        leftNodes.push(currentNodeKey);
-        currentNode = this.nodesObject[bottomNodeKey];
       }
     }
     let nodeCount = 0;
+    const configuration = [] as string[][];
     leftNodes.forEach(leftNode => {
       const row = [leftNode];
-      currentNode = this.nodesObject[leftNode];
+      let currentNode = this.nodesObject[leftNode];
       while(currentNode?.RightEdges.length) {
-        const currentNodeKey = this.verticalEdges[currentNode.RightEdges[0]].nodes[1];
+        currentNodeKey = this.verticalEdges[currentNode.RightEdges[0]].nodes[1];
         currentNode = this.nodesObject[currentNodeKey];
         row.push(currentNodeKey);
       }
@@ -340,30 +338,28 @@ export class LayoutGraph extends Graph {
   }
 
   public getColumnConfiguration(): string[][] {
-    const originNode = this.nodesObject['0-0'];
-    if(!originNode) {
+    if(!this.nodesObject['0-0']) {
       return [];
     }
-    const configuration = [] as string[][];
-    let topNodes = ['0-0'];
-    let currentNode = originNode;
-    while(currentNode?.RightEdges.length) {
-      if(!this.isBottomNodeAligned(currentNode)) {
+    let topNodes = [];
+    let currentNodeKey = '0-0';
+    while(currentNodeKey) {
+      const currentNode = this.nodesObject[currentNodeKey];
+      if(this.isBottomNodeAligned(currentNode)) {
+        topNodes.push(currentNodeKey);
+        currentNodeKey = this.verticalEdges[currentNode.RightEdges[0]]?.nodes[1];
+      } else {
         topNodes = [];
         break;
-      } else {
-        const [currentNodeKey, rightNodeKey] = this.verticalEdges[
-          currentNode.RightEdges[0]].nodes;
-        topNodes.push(currentNodeKey);
-        currentNode = this.nodesObject[rightNodeKey];
       }
     }
     let nodeCount = 0;
+    const configuration = [] as string[][];
     topNodes.forEach(topNode => {
       const column = [topNode];
-      currentNode = this.nodesObject[topNode];
+      let currentNode = this.nodesObject[topNode];
       while(currentNode?.BottomEdges.length) {
-        const currentNodeKey = this.horizontalEdges[currentNode.BottomEdges[0]].nodes[1];
+        currentNodeKey = this.horizontalEdges[currentNode.BottomEdges[0]].nodes[1];
         currentNode = this.nodesObject[currentNodeKey];
         column.push(currentNodeKey);
       }
