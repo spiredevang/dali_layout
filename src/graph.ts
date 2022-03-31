@@ -516,7 +516,9 @@ export class LayoutGraph extends Graph {
     const updatedRectangles = [] as Rectangle[];
     let top = 0;
     const minimumRowWidths = [];
+    const minimumRowHeights = [];
     const maximumRowWidths = [];
+    const maximumRowHeights = [];
     for(let i = 0; i < rows.length; ++i) {
       const nodeRow = rows[i].map(nodeKey => this.nodesObject[nodeKey]);
       let fixedHeight = 0;
@@ -545,6 +547,10 @@ export class LayoutGraph extends Graph {
       }
       const rectRow = [] as Rectangle[];
       const rowHeight = fixedHeight || minimumFlexibleHeight;
+      const [minHeight, maxHeight] = fixedHeight > 0 && [fixedHeight, fixedHeight] ||
+        [0, MAX_SIZE];
+      minimumRowHeights.push(minHeight);
+      maximumRowHeights.push(maxHeight);
       let left = 0;
       nodeRow.forEach(node => {
         const rect = {...node.Rectangle, top, left, height: rowHeight};
@@ -562,8 +568,14 @@ export class LayoutGraph extends Graph {
     }
     if(updatedRectangles.length &&
         updatedRectangles.length === Object.keys(this.nodesObject).length) {
+      const minimumLayoutHeight = minimumRowHeights.
+        reduce((sum, height) => sum + height, 0);
+      const maximumLayoutHeight = Math.min(MAX_SIZE,
+        maximumRowHeights.reduce((sum, height) => sum + height, 0));
       this.minimumWidth = Math.max(...minimumRowWidths);
+      this.minimumHeight = Math.min(this.minimumHeight, minimumLayoutHeight);
       this.maximumWidth = Math.min(MAX_SIZE, ...maximumRowWidths);
+      this.maximumHeight = Math.max(this.maximumHeight, maximumLayoutHeight);
       return updatedRectangles;
     } else {
       return [];
@@ -623,7 +635,9 @@ export class LayoutGraph extends Graph {
   public getResizedColumns(columns: string[][]) {
     const updatedRectangles = [] as Rectangle[];
     let left = 0;
+    const minimumColumnWidths = [];
     const minimumColumnHeights = [];
+    const maximumColumnWidths = [];
     const maximumColumnHeights = [];
     for(let i = 0; i < columns.length; ++i) {
       const nodeColumn = columns[i].map(nodeKey => this.nodesObject[nodeKey]);
@@ -653,6 +667,10 @@ export class LayoutGraph extends Graph {
       }
       const rectColumn = [] as Rectangle[];
       const columnWidth = fixedWidth || minimumFlexibleWidth;
+      const [minWidth, maxWidth] = fixedWidth > 0 && [fixedWidth, fixedWidth] ||
+        [0, MAX_SIZE];
+      minimumColumnWidths.push(minWidth);
+      maximumColumnWidths.push(maxWidth);
       let top = 0;
       nodeColumn.forEach(node => {
         const rect = {...node.Rectangle, left, top, width: columnWidth};
@@ -670,7 +688,13 @@ export class LayoutGraph extends Graph {
     }
     if(updatedRectangles.length &&
         updatedRectangles.length === Object.keys(this.nodesObject).length) {
+      const minimumLayoutWidth = minimumColumnWidths.
+        reduce((sum, width) => sum + width, 0);
+      const maximumLayoutWidth = Math.min(MAX_SIZE,
+        maximumColumnWidths.reduce((sum, width) => sum + width, 0));
+      this.minimumWidth = Math.min(this.minimumWidth, minimumLayoutWidth);
       this.minimumHeight = Math.max(...minimumColumnHeights);
+      this.maximumWidth = Math.max(this.maximumWidth, maximumLayoutWidth);
       this.maximumHeight = Math.min(MAX_SIZE, ...maximumColumnHeights);
       return updatedRectangles;
     } else {
