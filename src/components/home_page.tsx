@@ -165,8 +165,15 @@ export class HomePage extends React.Component<Properties, State> {
       if(rectangles) {
         this.layoutGraph = new LayoutGraph(rectangles);
         const resizedRectangles = this.layoutGraph.ResizedRows.length &&
-          this.layoutGraph.ResizedRows || this.layoutGraph.ResizedColumns;
-        this.setState({rectangles, resizedRectangles});
+          this.layoutGraph.ResizedRows.flat() || this.layoutGraph.ResizedColumns.flat();
+        const rowConfiguration = this.layoutGraph.RowConfiguration;
+        const columnConfiguration = this.layoutGraph.ColumnConfiguration;
+        this.setState({
+          rectangles,
+          resizedRectangles,
+          rowConfiguration,
+          columnConfiguration
+        });
       }
     }
   }
