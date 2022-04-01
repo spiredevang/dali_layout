@@ -513,12 +513,13 @@ export class LayoutGraph extends Graph {
   }
 
   public getResizedRows(rows: string[][]) {
-    const updatedRectangles = [] as Rectangle[];
+    const updatedRectangles = [] as Rectangle[][];
     let top = 0;
     const minimumRowWidths = [];
     const minimumRowHeights = [];
     const maximumRowWidths = [];
     const maximumRowHeights = [];
+    let nodes = 0;
     for(let i = 0; i < rows.length; ++i) {
       const nodeRow = rows[i].map(nodeKey => this.nodesObject[nodeKey]);
       let fixedHeight = 0;
@@ -555,19 +556,19 @@ export class LayoutGraph extends Graph {
       nodeRow.forEach(node => {
         const rect = {...node.Rectangle, top, left, height: rowHeight};
         rectRow.push(rect);
+        ++nodes;
         left += rect.width;
       });
       top += rowHeight;
       if(rectRow.length === rows[i].length) {
-        updatedRectangles.push(...rectRow);
+        updatedRectangles.push(rectRow);
         minimumRowWidths.push(minimumWidth);
         maximumRowWidths.push(maximumWidth);
       } else {
         break;
       }
     }
-    if(updatedRectangles.length &&
-        updatedRectangles.length === Object.keys(this.nodesObject).length) {
+    if(nodes === Object.keys(this.nodesObject).length) {
       const minimumLayoutHeight = minimumRowHeights.
         reduce((sum, height) => sum + height, 0);
       const maximumLayoutHeight = Math.min(MAX_SIZE,
@@ -633,12 +634,13 @@ export class LayoutGraph extends Graph {
   }
 
   public getResizedColumns(columns: string[][]) {
-    const updatedRectangles = [] as Rectangle[];
+    const updatedRectangles = [] as Rectangle[][];
     let left = 0;
     const minimumColumnWidths = [];
     const minimumColumnHeights = [];
     const maximumColumnWidths = [];
     const maximumColumnHeights = [];
+    let nodes = 0;
     for(let i = 0; i < columns.length; ++i) {
       const nodeColumn = columns[i].map(nodeKey => this.nodesObject[nodeKey]);
       let fixedWidth = 0;
@@ -675,19 +677,19 @@ export class LayoutGraph extends Graph {
       nodeColumn.forEach(node => {
         const rect = {...node.Rectangle, left, top, width: columnWidth};
         rectColumn.push(rect);
+        ++nodes;
         top += rect.height;
       });
       left += columnWidth;
       if(rectColumn.length === columns[i].length) {
-        updatedRectangles.push(...rectColumn);
+        updatedRectangles.push(rectColumn);
         minimumColumnHeights.push(minimumHeight);
         maximumColumnHeights.push(maximumHeight);
       } else {
         break;
       }
     }
-    if(updatedRectangles.length &&
-        updatedRectangles.length === Object.keys(this.nodesObject).length) {
+    if(nodes === Object.keys(this.nodesObject).length) {
       const minimumLayoutWidth = minimumColumnWidths.
         reduce((sum, width) => sum + width, 0);
       const maximumLayoutWidth = Math.min(MAX_SIZE,
@@ -722,19 +724,37 @@ export class LayoutGraph extends Graph {
     return this.maximumHeight;
   }
 
-  public get ResizedRows(): Rectangle[] {
+  public get ResizedRows(): Rectangle[][] {
     return this.resizedRows;
   }
 
-  public get ResizedColumns(): Rectangle[] {
+  public get ResizedColumns(): Rectangle[][] {
     return this.resizedColumns;
+  }  
+
+  public get RowConfiguration(): Rectangle[][] {
+    if(this.rowConfiguration.length) {
+      return this.rowConfiguration.map(row =>
+        row.map(nodeKey => this.nodesObject[nodeKey].Rectangle));
+    } else {
+      return this.resizedRows;
+    }
+  }
+
+  public get ColumnConfiguration(): Rectangle[][] {
+    if(this.columnConfiguration.length) {
+      return this.columnConfiguration.map(column =>
+        column.map(nodeKey => this.nodesObject[nodeKey].Rectangle));
+    } else {
+      return this.resizedColumns;
+    }
   }
 
   private nodesObject: {[key: string]: LayoutNode};
   private rowConfiguration: string[][];
   private columnConfiguration: string[][];
-  private resizedRows: Rectangle[];
-  private resizedColumns: Rectangle[];
+  private resizedRows: Rectangle[][];
+  private resizedColumns: Rectangle[][];
   private rowLimits: Limits;
   private columnLimits: Limits;
   private minimumWidth: number;
