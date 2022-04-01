@@ -17,7 +17,7 @@ const ASSOCIATIVITY = {
   '-': 'Left'
 } as {[key: string]: string};
 
-export class Constraint {
+export class EqualityConstraint {
   public constructor(constraint: string) {
     const trimmedConstraint = constraint.replace(/\s+/g, '');
     const [property, infixNotation] = trimmedConstraint.split('=');
