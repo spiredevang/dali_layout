@@ -11,8 +11,16 @@ interface Properties {}
 interface State {
   rectangles: Rectangle[];
   resizedRectangles: Rectangle[];
+  rowConfiguration: Rectangle[][];
+  columnConfiguration: Rectangle[][];
   showOriginalRectangles: boolean;
+  orientation: Orientation;
   isPopupDisplayed: boolean;
+}
+
+enum Orientation {
+  ROW,
+  COLUMN
 }
 
 /** The home page component. */
@@ -22,7 +30,10 @@ export class HomePage extends React.Component<Properties, State> {
     this.state = {
       rectangles: [],
       resizedRectangles: [],
+      rowConfiguration: [],
+      columnConfiguration: [],
       showOriginalRectangles: true,
+      orientation: Orientation.ROW,
       isPopupDisplayed: false
     };
     this.layoutGraph = new LayoutGraph([]);
@@ -73,6 +84,20 @@ export class HomePage extends React.Component<Properties, State> {
           <LayoutViewer rectangles={displayedRectangles}/>
           <div style={HomePage.STYLE.rightPanel}>
             <div style={HomePage.STYLE.limitSpecs}>
+              <div>
+                <input type='radio' id='row' value={Orientation.ROW}
+                  disabled={this.state.rowConfiguration.length === 0}
+                  checked={this.state.orientation === Orientation.ROW}
+                  onChange={this.onOrientationChange}/>
+                <label htmlFor='row'>Row</label>
+              </div>
+              <div>
+                <input type='radio' id='column' value={Orientation.COLUMN}
+                  disabled={this.state.columnConfiguration.length === 0}
+                  checked={this.state.orientation === Orientation.COLUMN}
+                  onChange={this.onOrientationChange}/>
+                <label htmlFor='column'>Column</label>
+              </div>
               <div>Minimum width:</div>
               <div style={HomePage.STYLE.specValue}>
                 {this.layoutGraph.MinimumWidth}
@@ -167,6 +192,10 @@ export class HomePage extends React.Component<Properties, State> {
 
   private onUpdateRectangles = (rectangles: Rectangle[]) => {
     this.setState({rectangles});
+  }
+
+  private onOrientationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({orientation: +event.target.value});
   }
 
   private onOpenLayoutPopup = () => {
