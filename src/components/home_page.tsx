@@ -243,7 +243,9 @@ export class HomePage extends React.Component<Properties, State> {
   }
 
   private onOpenLayoutPopup = () => {
-    this.layoutGraph = new LayoutGraph(this.state.rectangles);
+    const displayedRectangles = this.state.isOriginalLayoutDisplayed &&
+      this.state.rectangles || this.state.resizedRectangles;
+    this.layoutGraph = new LayoutGraph(displayedRectangles);
     const resizedRectangles = this.layoutGraph.ResizedRows.length &&
       this.layoutGraph.ResizedRows.flat() || this.layoutGraph.ResizedColumns.flat();
     const rowConfiguration = this.layoutGraph.RowConfiguration;
