@@ -179,8 +179,8 @@ export class LayoutGraph extends Graph {
     this.columnConfiguration = [];
     this.resizedRows = [];
     this.resizedColumns = [];
-    this.rowLimits = baseLimits;
-    this.columnLimits = baseLimits;
+    this.rowLimits = BASE_LIMITS;
+    this.columnLimits = BASE_LIMITS;
     this.minimumWidth = 0;
     this.minimumHeight = 0;
     this.maximumWidth = MAX_SIZE;
@@ -577,6 +577,12 @@ export class LayoutGraph extends Graph {
       this.minimumHeight = Math.min(this.minimumHeight, minimumLayoutHeight);
       this.maximumWidth = Math.min(MAX_SIZE, ...maximumRowWidths);
       this.maximumHeight = Math.max(this.maximumHeight, maximumLayoutHeight);
+      this.rowLimits = {
+        minimumWidth: this.minimumWidth,
+        minimumHeight: minimumLayoutHeight,
+        maximumWidth: this.maximumWidth,
+        maximumHeight: maximumLayoutHeight
+      };
       return updatedRectangles;
     } else {
       return [];
@@ -698,6 +704,12 @@ export class LayoutGraph extends Graph {
       this.minimumHeight = Math.max(...minimumColumnHeights);
       this.maximumWidth = Math.max(this.maximumWidth, maximumLayoutWidth);
       this.maximumHeight = Math.min(MAX_SIZE, ...maximumColumnHeights);
+      this.columnLimits = {
+        minimumWidth: minimumLayoutWidth,
+        minimumHeight: this.minimumHeight,
+        maximumWidth: maximumLayoutWidth,
+        maximumHeight: this.maximumHeight
+      };
       return updatedRectangles;
     } else {
       return [];
