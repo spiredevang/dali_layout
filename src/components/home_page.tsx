@@ -243,7 +243,23 @@ export class HomePage extends React.Component<Properties, State> {
   }
 
   private onOpenLayoutPopup = () => {
-    this.setState({isPopupDisplayed: true});
+    this.layoutGraph = new LayoutGraph(this.state.rectangles);
+    const resizedRectangles = this.layoutGraph.ResizedRows.length &&
+      this.layoutGraph.ResizedRows.flat() || this.layoutGraph.ResizedColumns.flat();
+    const rowConfiguration = this.layoutGraph.RowConfiguration;
+    const columnConfiguration = this.layoutGraph.ColumnConfiguration;
+    const rowLimits = this.layoutGraph.RowLimits;
+    const columnLimits = this.layoutGraph.ColumnLimits;
+    const orientation = rowConfiguration.length ? Orientation.ROW : Orientation.COLUMN;
+    this.setState({
+      resizedRectangles,
+      rowConfiguration,
+      columnConfiguration,
+      rowLimits,
+      columnLimits,
+      orientation,
+      isPopupDisplayed: true
+    });
   }
 
   private onCloseLayoutPopup = () => {
