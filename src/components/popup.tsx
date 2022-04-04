@@ -2,6 +2,8 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 
 interface Properties {
+  width?: number;
+  height?: number;
   onClosePopup: () => void;
 }
 
@@ -12,6 +14,11 @@ interface State {
 
 /** The popup component. */
 export class Popup extends React.Component<Properties, State> {
+  public static readonly defaultProps: {
+    width: 1000,
+    height: 500;
+  }
+
   constructor(props: Properties) {
     super(props);
     this.state = {el: null, win: window};
@@ -25,7 +32,8 @@ export class Popup extends React.Component<Properties, State> {
   }
 
   public componentDidMount(): void {
-    const win = this.state.win.open('', '', 'width=1000,height=500') as Window;
+    const {width, height} = this.props;
+    const win = this.state.win.open('', '', `width=${width},height=${height}`) as Window;
     const el = document.createElement('div');
     win.document.body.appendChild(el);
     this.setState({el, win});

@@ -54,10 +54,18 @@ export class HomePage extends React.Component<Properties, State> {
     })();
     const displayedRectangles = this.state.showOriginalRectangles &&
       this.state.rectangles || this.state.resizedRectangles;
-    const rectangleMatrix = this.state.orientation === Orientation.ROW &&
-      this.state.rowConfiguration || this.state.columnConfiguration;
-    const limits = this.state.orientation === Orientation.ROW &&
-      this.state.rowLimits || this.state.columnLimits;
+    const isRow = this.state.orientation === Orientation.ROW;
+    const rectangleMatrix =  isRow && this.state.rowConfiguration ||
+      this.state.columnConfiguration;
+    const limits = isRow && this.state.rowLimits || this.state.columnLimits;
+    const [popupWidth, popupHeight] = (() => {
+      const [width, height] = this.layoutGraph.boundaries;
+      if(isRow) {
+        return [width, height * 1.2];
+      } else {
+        return [width * 1.2 , height];
+      }
+    })();
     return (
       <div style={HomePage.STYLE.container}>
         <h1>Layout Application</h1>
@@ -131,7 +139,10 @@ export class HomePage extends React.Component<Properties, State> {
         </div>
         <div style={HomePage.STYLE.popupContainer}>
           {this.state.isPopupDisplayed && (
-            <Popup onClosePopup={this.onCloseLayoutPopup}>
+            <Popup
+                width={popupWidth}
+                height={popupHeight}
+                onClosePopup={this.onCloseLayoutPopup}>
               <FlexLayoutViewer 
                 rectangleMatrix={rectangleMatrix}
                 limits={limits}
@@ -181,8 +192,8 @@ export class HomePage extends React.Component<Properties, State> {
         const rowConfiguration = this.layoutGraph.RowConfiguration;
         const columnConfiguration = this.layoutGraph.ColumnConfiguration;
         const rowLimits = this.layoutGraph.RowLimits;
-        const columnLimits = this.layoutGraph.ColumnLimits;
         const orientation = rowConfiguration.length ? Orientation.ROW : Orientation.COLUMN;
+        const columnLimits = this.layoutGraph.ColumnLimits;
         this.setState({
           rectangles,
           resizedRectangles,

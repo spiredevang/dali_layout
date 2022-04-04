@@ -770,6 +770,10 @@ export class LayoutGraph extends Graph {
     }
   }
 
+  public get boundaries(): [number, number] {
+    return [this.boundaryX, this.boundaryY];
+  }
+
   private nodesObject: {[key: string]: LayoutNode};
   private rowConfiguration: string[][];
   private columnConfiguration: string[][];
