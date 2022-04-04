@@ -3,6 +3,7 @@ import {LayoutGraph} from '../graph';
 import {Rectangle} from '../rectangle';
 import {getConstraint} from '../utilities';
 import {Popup} from './popup';
+import {FlexLayoutViewer} from './flex_layout_viewer';
 import {LayoutViewer} from './layout_viewer';
 import {RectanglesInput} from './rectangle_input';
 
@@ -18,7 +19,7 @@ interface State {
   isPopupDisplayed: boolean;
 }
 
-enum Orientation {
+export enum Orientation {
   ROW,
   COLUMN
 }
@@ -49,6 +50,8 @@ export class HomePage extends React.Component<Properties, State> {
     })();
     const displayedRectangles = this.state.showOriginalRectangles &&
       this.state.rectangles || this.state.resizedRectangles;
+    const rectangleMatrix = this.state.orientation === Orientation.ROW &&
+      this.state.rowConfiguration || this.state.columnConfiguration;
     return (
       <div style={HomePage.STYLE.container}>
         <h1>Layout Application</h1>
@@ -123,7 +126,9 @@ export class HomePage extends React.Component<Properties, State> {
         <div style={HomePage.STYLE.popupContainer}>
           {this.state.isPopupDisplayed && (
             <Popup onClosePopup={this.onCloseLayoutPopup}>
-              <LayoutViewer rectangles={displayedRectangles}/>
+              <FlexLayoutViewer 
+                rectangleMatrix={rectangleMatrix}
+                orientation={this.state.orientation}/>
             </Popup>)}
         </div>
       </div>);
@@ -168,11 +173,13 @@ export class HomePage extends React.Component<Properties, State> {
           this.layoutGraph.ResizedRows.flat() || this.layoutGraph.ResizedColumns.flat();
         const rowConfiguration = this.layoutGraph.RowConfiguration;
         const columnConfiguration = this.layoutGraph.ColumnConfiguration;
+        const orientation = rowConfiguration.length ? Orientation.ROW : Orientation.COLUMN;
         this.setState({
           rectangles,
           resizedRectangles,
           rowConfiguration,
-          columnConfiguration
+          columnConfiguration,
+          orientation
         });
       }
     }
