@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {BASE_LIMITS, LayoutGraph, Limits} from '../graph';
-import {Rectangle} from '../rectangle';
+import {Constraint, Rectangle} from '../rectangle';
 import {getConstraint} from '../utilities';
 import {Popup} from './popup';
 import {FlexLayoutViewer} from './flex_layout_viewer';
@@ -135,6 +135,10 @@ export class HomePage extends React.Component<Properties, State> {
             {this.state.showOriginalRectangles &&
               <RectanglesInput rectangles={this.state.rectangles}
                 onUpdate={this.onUpdateRectangles}/>}
+            {this.state.rectangles.length > 0 && 
+              <button onClick={this.onDownloadJSON} style={{marginTop: 5}}>
+                DOWNLOAD JSON
+              </button>}
           </div>
         </div>
         <div style={HomePage.STYLE.popupContainer}>
@@ -244,6 +248,21 @@ export class HomePage extends React.Component<Properties, State> {
 
   private toggleResizedLayout = () => {
     this.setState({showOriginalRectangles: !this.state.showOriginalRectangles});
+  }
+
+  private onDownloadJSON = () => {
+    const layout = this.state.rectangles.map(rectangle =>
+      ({
+        ...rectangle,
+        horizontalPolicy: Constraint[rectangle.horizontalPolicy],
+        verticalPolicy: Constraint[rectangle.verticalPolicy]
+      }));
+    const data = {layout};
+    const file = new Blob([JSON.stringify(data)], {type: 'application/json'});
+    const anchor = document.createElement('a');
+    anchor.href = URL.createObjectURL(file);
+    anchor.download = 'layout.json';
+    anchor.click();
   }
 
   private static readonly STYLE = {
