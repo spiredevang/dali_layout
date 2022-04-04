@@ -16,7 +16,7 @@ interface State {
   columnConfiguration: Rectangle[][];
   rowLimits: Limits;
   columnLimits: Limits;
-  showOriginalRectangles: boolean;
+  isOriginalLayoutDisplayed: boolean;
   orientation: Orientation;
   isPopupDisplayed: boolean;
 }
@@ -37,7 +37,7 @@ export class HomePage extends React.Component<Properties, State> {
       columnConfiguration: [],
       rowLimits: BASE_LIMITS,
       columnLimits: BASE_LIMITS,
-      showOriginalRectangles: true,
+      isOriginalLayoutDisplayed: true,
       orientation: Orientation.ROW,
       isPopupDisplayed: false
     };
@@ -52,7 +52,7 @@ export class HomePage extends React.Component<Properties, State> {
         return {layoutHandler: this.onOpenLayoutPopup, buttonText: 'Open'};
       }
     })();
-    const displayedRectangles = this.state.showOriginalRectangles &&
+    const displayedRectangles = this.state.isOriginalLayoutDisplayed &&
       this.state.rectangles || this.state.resizedRectangles;
     const isRow = this.state.orientation === Orientation.ROW;
     const rectangleMatrix =  isRow && this.state.rowConfiguration ||
@@ -66,6 +66,7 @@ export class HomePage extends React.Component<Properties, State> {
         return [width * 1.2 , height];
       }
     })();
+    const layoutToggleText = this.state.isOriginalLayoutDisplayed ? 'resized' : 'original'
     return (
       <div style={HomePage.STYLE.container}>
         <h1>Layout Application</h1>
@@ -93,7 +94,7 @@ export class HomePage extends React.Component<Properties, State> {
           {this.state.resizedRectangles.length > 0 &&
             <button onClick={this.toggleResizedLayout}
                 style={{marginRight: 50}}>
-              Toggle resized layout
+              Show {layoutToggleText} layout
             </button>}
           <button onClick={layoutHandler}>{buttonText} layout</button>
         </div>
@@ -132,9 +133,8 @@ export class HomePage extends React.Component<Properties, State> {
                 {this.layoutGraph.MaximumHeight}
               </div>
             </div>
-            {this.state.showOriginalRectangles &&
-              <RectanglesInput rectangles={this.state.rectangles}
-                onUpdate={this.onUpdateRectangles}/>}
+            <RectanglesInput rectangles={displayedRectangles}
+              onUpdate={this.onUpdateRectangles}/>
             {this.state.rectangles.length > 0 && 
               <button onClick={this.onDownloadJSON} style={{marginTop: 5}}>
                 DOWNLOAD JSON
@@ -231,7 +231,11 @@ export class HomePage extends React.Component<Properties, State> {
   }
 
   private onUpdateRectangles = (rectangles: Rectangle[]) => {
-    this.setState({rectangles});
+    if(this.state.isOriginalLayoutDisplayed) {
+      this.setState({rectangles});
+    } else {
+      this.setState({resizedRectangles: rectangles});
+    }
   }
 
   private onOrientationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -247,11 +251,13 @@ export class HomePage extends React.Component<Properties, State> {
   }
 
   private toggleResizedLayout = () => {
-    this.setState({showOriginalRectangles: !this.state.showOriginalRectangles});
+    this.setState({isOriginalLayoutDisplayed: !this.state.isOriginalLayoutDisplayed});
   }
 
   private onDownloadJSON = () => {
-    const layout = this.state.rectangles.map(rectangle =>
+    const displayedRectangles = this.state.isOriginalLayoutDisplayed &&
+      this.state.rectangles || this.state.resizedRectangles;
+    const layout = displayedRectangles.map(rectangle =>
       ({
         ...rectangle,
         horizontalPolicy: Constraint[rectangle.horizontalPolicy],
