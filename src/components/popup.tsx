@@ -31,6 +31,7 @@ export class Popup extends React.Component<Properties, State> {
     this.setState({el, win});
     win.addEventListener('beforeunload', this.props.onClosePopup);
     copyStyles(document, win.document);
+    el.setAttribute('style', 'height: 100%;');
   }
 
   public componentWillUnmount(): void {

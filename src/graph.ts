@@ -16,14 +16,14 @@ interface VerticalEdge {
   left: number;
 }
 
-interface Limits {
+export interface Limits {
   minimumWidth: number;
   minimumHeight: number;
   maximumWidth: number;
   maximumHeight: number;
 }
 
-const baseLimits = {
+export const BASE_LIMITS = {
   minimumWidth: 0,
   minimumHeight: 0,
   maximumWidth: MAX_SIZE,
@@ -742,6 +742,14 @@ export class LayoutGraph extends Graph {
 
   public get ResizedColumns(): Rectangle[][] {
     return this.resizedColumns;
+  }  
+
+  public get RowLimits(): Limits {
+    return this.rowLimits;
+  }
+
+  public get ColumnLimits(): Limits {
+    return this.columnLimits;
   }  
 
   public get RowConfiguration(): Rectangle[][] {

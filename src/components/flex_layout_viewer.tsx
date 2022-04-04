@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {Limits} from '../graph';
 import {Constraint, Rectangle} from '../rectangle';
 import {getRectangleBorderStyles} from '../utilities';
 import {Orientation} from './home_page';
@@ -6,6 +7,7 @@ import {Orientation} from './home_page';
 interface Properties {
   rectangleMatrix: Rectangle[][];
   orientation: Orientation;
+  limits: Limits;
 }
 
 /** The flex layout viewer component. */
@@ -16,8 +18,18 @@ export class FlexLayoutViewer extends React.Component<Properties> {
     const flexDirection = isRow && 'row' || 'column';
     const gap = isRow && '1px 0' || '0 1px';
     const dim = isRow && {width: '100%', columnGap: 1} || {height: '100%', rowGap: 1};
+    const [width, height] = (() => {
+      if(this.props.limits) {
+        const {minimumWidth, minimumHeight, maximumWidth, maximumHeight} = this.props.limits;
+        const width = `clamp(${minimumWidth}px, 100%, ${maximumWidth}px)`;
+        const height = `clamp(${minimumHeight}px, 100%, ${maximumHeight}px)`;
+        return [width, height];
+      } else {
+        return ['100%, 100%'];
+      }
+    })();
     return (
-      <div style={{...FlexLayoutViewer.STYLE.flexContainer,
+      <div style={{...FlexLayoutViewer.STYLE.container, width, height,
           flexDirection: flexContainerDirection, gap}}>
         {this.props.rectangleMatrix?.map((set, index) => {
           const isWidthFlexible = set.every(rect =>
@@ -84,12 +96,6 @@ export class FlexLayoutViewer extends React.Component<Properties> {
   };
   private static readonly STYLE = {
     container: {
-      position: 'relative',
-      overflow: 'auto',
-      border: '5px solid #000000',
-      height: '100%'
-    } as React.CSSProperties,
-    flexContainer: {
       height: '100%',
       display: 'flex',
       alignContent: 'flex-start'

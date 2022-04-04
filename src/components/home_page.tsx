@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {LayoutGraph} from '../graph';
+import {BASE_LIMITS, LayoutGraph, Limits} from '../graph';
 import {Rectangle} from '../rectangle';
 import {getConstraint} from '../utilities';
 import {Popup} from './popup';
@@ -14,6 +14,8 @@ interface State {
   resizedRectangles: Rectangle[];
   rowConfiguration: Rectangle[][];
   columnConfiguration: Rectangle[][];
+  rowLimits: Limits;
+  columnLimits: Limits;
   showOriginalRectangles: boolean;
   orientation: Orientation;
   isPopupDisplayed: boolean;
@@ -33,6 +35,8 @@ export class HomePage extends React.Component<Properties, State> {
       resizedRectangles: [],
       rowConfiguration: [],
       columnConfiguration: [],
+      rowLimits: BASE_LIMITS,
+      columnLimits: BASE_LIMITS,
       showOriginalRectangles: true,
       orientation: Orientation.ROW,
       isPopupDisplayed: false
@@ -52,6 +56,8 @@ export class HomePage extends React.Component<Properties, State> {
       this.state.rectangles || this.state.resizedRectangles;
     const rectangleMatrix = this.state.orientation === Orientation.ROW &&
       this.state.rowConfiguration || this.state.columnConfiguration;
+    const limits = this.state.orientation === Orientation.ROW &&
+      this.state.rowLimits || this.state.columnLimits;
     return (
       <div style={HomePage.STYLE.container}>
         <h1>Layout Application</h1>
@@ -128,6 +134,7 @@ export class HomePage extends React.Component<Properties, State> {
             <Popup onClosePopup={this.onCloseLayoutPopup}>
               <FlexLayoutViewer 
                 rectangleMatrix={rectangleMatrix}
+                limits={limits}
                 orientation={this.state.orientation}/>
             </Popup>)}
         </div>
@@ -173,12 +180,16 @@ export class HomePage extends React.Component<Properties, State> {
           this.layoutGraph.ResizedRows.flat() || this.layoutGraph.ResizedColumns.flat();
         const rowConfiguration = this.layoutGraph.RowConfiguration;
         const columnConfiguration = this.layoutGraph.ColumnConfiguration;
+        const rowLimits = this.layoutGraph.RowLimits;
+        const columnLimits = this.layoutGraph.ColumnLimits;
         const orientation = rowConfiguration.length ? Orientation.ROW : Orientation.COLUMN;
         this.setState({
           rectangles,
           resizedRectangles,
           rowConfiguration,
           columnConfiguration,
+          rowLimits,
+          columnLimits,
           orientation
         });
       }
