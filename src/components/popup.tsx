@@ -10,8 +10,8 @@ interface State {
   win: Window;
 }
 
-/** The layout popup component. */
-export class LayoutPopup extends React.Component<Properties, State> {
+/** The popup component. */
+export class Popup extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
     this.state = {el: null, win: window};

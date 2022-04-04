@@ -2,7 +2,7 @@ import * as React from 'react';
 import {LayoutGraph} from '../graph';
 import {Rectangle} from '../rectangle';
 import {getConstraint} from '../utilities';
-import {LayoutPopup} from './layout_popup';
+import {Popup} from './popup';
 import {LayoutViewer} from './layout_viewer';
 import {RectanglesInput} from './rectangle_input';
 
@@ -122,9 +122,9 @@ export class HomePage extends React.Component<Properties, State> {
         </div>
         <div style={HomePage.STYLE.popupContainer}>
           {this.state.isPopupDisplayed && (
-            <LayoutPopup onClosePopup={this.onCloseLayoutPopup}>
-              {this.renderLayoutPopup()}
-            </LayoutPopup>)}
+            <Popup onClosePopup={this.onCloseLayoutPopup}>
+              <LayoutViewer rectangles={displayedRectangles}/>
+            </Popup>)}
         </div>
       </div>);
   }
@@ -211,13 +211,6 @@ export class HomePage extends React.Component<Properties, State> {
 
   private onCloseLayoutPopup = () => {
     this.setState({isPopupDisplayed: false});
-  }
-
-  private renderLayoutPopup() {
-    return (
-      <div style={HomePage.STYLE.layoutPopup}>
-        layout pop
-      </div>);
   }
 
   private toggleResizedLayout = () => {
