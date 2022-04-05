@@ -34,10 +34,13 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
 
   public render(): JSX.Element {
     const isRow = this.props.orientation === Orientation.ROW;
-    const flexContainerDirection = isRow && 'column' || 'row';
-    const flexDirection = isRow && 'row' || 'column';
-    const gap = isRow && '1px 0' || '0 1px';
-    const dim = isRow && {width: '100%', columnGap: 1} || {height: '100%', rowGap: 1};
+    const [flexContainerDirection, flexDirection, gap, dim] = (() => {
+      if(isRow) {
+        return ['column' as 'column', 'row' as 'row', '1px 0', {width: '100%', columnGap: 1}];
+      } else {
+        return ['row' as 'row', 'column' as 'column', '0 1px', {height: '100%', rowGap: 1}];
+      }
+    })();
     const [widthLimit, heightLimit] = (() => {
       if(this.props.limits) {
         const {minimumWidth, minimumHeight, maximumWidth, maximumHeight} = this.props.limits;
@@ -61,9 +64,9 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
               rect.verticalPolicy === Constraint.FILL_SPACE);
             const flex = (() => {
               if(isRow) {
-                return isHeightFlexible && '1 1 auto' || '0 0 auto';
+                return (isHeightFlexible && '1 1 auto') || '0 0 auto';
               } else {
-                return isWidthFlexible && '1 1 auto' || '0 0 auto';
+                return (isWidthFlexible && '1 1 auto') || '0 0 auto';
               }
             })();
             return (
@@ -112,13 +115,13 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
     const orientationStyle = (() => {
       if(this.props.orientation === Orientation.ROW) {
         return {
-          flex: isWidthFlexible && '1 1 auto' || '0 0 auto',
-          height: isHeightFlexible && 'auto' || rectangle.height
+          flex: (isWidthFlexible && '1 1 auto') || '0 0 auto',
+          height: (isHeightFlexible && 'auto') || rectangle.height
         };
       } else if(this.props.orientation === Orientation.COLUMN) {
         return {
-          flex: isHeightFlexible && '1 1 auto' || '0 0 auto',
-          width: isWidthFlexible && 'auto' || rectangle.width
+          flex: (isHeightFlexible && '1 1 auto') || '0 0 auto',
+          width: (isWidthFlexible && 'auto') || rectangle.width
         };
       }
     })() as React.CSSProperties;
