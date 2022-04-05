@@ -11,6 +11,7 @@ interface Properties {}
 
 interface State {
   rectangles: Rectangle[];
+  constraints: string[];
   resizedRectangles: Rectangle[];
   rowConfiguration: Rectangle[][];
   columnConfiguration: Rectangle[][];
@@ -32,6 +33,7 @@ export class HomePage extends React.Component<Properties, State> {
     super(props)
     this.state = {
       rectangles: [],
+      constraints: [],
       resizedRectangles: [],
       rowConfiguration: [],
       columnConfiguration: [],
@@ -135,8 +137,21 @@ export class HomePage extends React.Component<Properties, State> {
             </div>
             <RectanglesInput rectangles={displayedRectangles}
               onUpdate={this.onUpdateRectangles}/>
+            {this.state.constraints.length > 0 &&
+              <div style={HomePage.STYLE.constraintsContainer}>
+                {this.state.constraints.map((constraint, index) => 
+                  <div key={index} style={HomePage.STYLE.constraintRow}>
+                    <input name="" value={constraint}
+                      onChange={this.onChangeConstraint(index)}
+                      style={HomePage.STYLE.constraintInput}/>
+                    <button onClick={() => this.onRemoveConstraint(index)}>
+                      REMOVE
+                    </button>
+                  </div>)}
+                <button onClick={this.onAddConstraint}>ADD CONSTRAINT</button>
+              </div>}
             {this.state.rectangles.length > 0 && 
-              <button onClick={this.onDownloadJSON} style={{marginTop: 5}}>
+              <button onClick={this.onDownloadJSON}>
                 DOWNLOAD JSON
               </button>}
           </div>
@@ -191,6 +206,7 @@ export class HomePage extends React.Component<Properties, State> {
         }, []);
       if(rectangles) {
         this.layoutGraph = new LayoutGraph(rectangles);
+        const constraints = this.validateConstraints(object.constraints);
         const resizedRectangles = (this.layoutGraph.ResizedRows.length &&
           this.layoutGraph.ResizedRows.flat()) || this.layoutGraph.ResizedColumns.flat();
         const rowConfiguration = this.layoutGraph.RowConfiguration;
@@ -200,6 +216,7 @@ export class HomePage extends React.Component<Properties, State> {
         const columnLimits = this.layoutGraph.ColumnLimits;
         this.setState({
           rectangles,
+          constraints,
           resizedRectangles,
           rowConfiguration,
           columnConfiguration,
@@ -228,6 +245,33 @@ export class HomePage extends React.Component<Properties, State> {
         verticalPolicy
       } as Rectangle;
     }
+  }
+
+  private validateConstraints(object: any) {
+    if(Array.isArray(object)) {
+      return object;
+    } else {
+      return [];
+    }
+  }
+
+  private onChangeConstraint = (index: number) =>
+      (event: React.ChangeEvent<HTMLInputElement>) => {
+    const constraints = this.state.constraints.slice();
+    constraints[index] = event.target.value;
+    this.setState({constraints});
+  }
+
+  private onRemoveConstraint = (index: number) => {
+    const constraints = this.state.constraints.slice();
+    constraints.splice(index, 1);
+    this.setState({constraints});
+  }
+
+  private onAddConstraint = () => {
+    const constraints = this.state.constraints.slice();
+    constraints.push('');
+    this.setState({constraints});
   }
 
   private onUpdateRectangles = (rectangles: Rectangle[]) => {
@@ -280,7 +324,7 @@ export class HomePage extends React.Component<Properties, State> {
         horizontalPolicy: Constraint[rectangle.horizontalPolicy],
         verticalPolicy: Constraint[rectangle.verticalPolicy]
       }));
-    const data = {layout};
+    const data = {layout, constraints: this.state.constraints};
     const file = new Blob([JSON.stringify(data)], {type: 'application/json'});
     const anchor = document.createElement('a');
     anchor.href = URL.createObjectURL(file);
@@ -311,7 +355,8 @@ export class HomePage extends React.Component<Properties, State> {
       height: '100%',
       overflowY: 'auto',
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      rowGap: 5
     } as React.CSSProperties,
     limitSpecs: {
       margin: '10px 0',
@@ -320,6 +365,18 @@ export class HomePage extends React.Component<Properties, State> {
     } as React.CSSProperties,
     specValue: {
       justifySelf: 'end'
+    } as React.CSSProperties,
+    constraintsContainer: {
+      display: 'flex',
+      flexWrap: 'wrap'
+    } as React.CSSProperties,
+    constraintRow: {
+      padding: '5px 0',
+      display: 'flex',
+      columnGap: 5
+    } as React.CSSProperties,
+    constraintInput: {
+      width: 'calc(100% - 70px)'
     } as React.CSSProperties,
     popupContainer: {
       position: 'absolute',
