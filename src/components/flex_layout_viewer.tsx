@@ -36,9 +36,9 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
     const isRow = this.props.orientation === Orientation.ROW;
     const [flexContainerDirection, flexDirection, gap, dim] = (() => {
       if(isRow) {
-        return ['column' as 'column', 'row' as 'row', '1px 0', {width: '100%', columnGap: 1}];
+        return ['column' as 'column', 'row' as 'row', '1px 0', {width: '100%'}];
       } else {
-        return ['row' as 'row', 'column' as 'column', '0 1px', {height: '100%', rowGap: 1}];
+        return ['row' as 'row', 'column' as 'column', '0 1px', {height: '100%'}];
       }
     })();
     const [widthLimit, heightLimit] = (() => {
@@ -116,12 +116,14 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
       if(this.props.orientation === Orientation.ROW) {
         return {
           flex: (isWidthFlexible && '1 1 auto') || '0 0 auto',
-          height: (isHeightFlexible && 'auto') || rectangle.height
+          height: (isHeightFlexible && 'auto') || rectangle.height,
+          borderRightStyle: 'solid'
         };
       } else if(this.props.orientation === Orientation.COLUMN) {
         return {
           flex: (isHeightFlexible && '1 1 auto') || '0 0 auto',
-          width: (isWidthFlexible && 'auto') || rectangle.width
+          width: (isWidthFlexible && 'auto') || rectangle.width,
+          borderBottomStyle: 'solid'
         };
       }
     })() as React.CSSProperties;
@@ -179,7 +181,8 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
       top: 0,
       left: 0,
       overflow: 'hidden',
-      border: 'none'
+      borderWidth: 1,
+      borderColor: '#FFFFFF'
     } as React.CSSProperties,
     borderContainer: {
       position: 'relative',
