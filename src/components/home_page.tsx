@@ -250,15 +250,16 @@ export class HomePage extends React.Component<Properties, State> {
     const columnConfiguration = this.layoutGraph.ColumnConfiguration;
     const rowLimits = this.layoutGraph.RowLimits;
     const columnLimits = this.layoutGraph.ColumnLimits;
-    const orientation = rowConfiguration.length ? Orientation.ROW : Orientation.COLUMN;
+    const isPopupDisplayed = ((this.state.orientation === Orientation.ROW) &&
+      rowConfiguration.length > 0) || ((this.state.orientation === Orientation.COLUMN)
+      && columnConfiguration.length > 0)
     this.setState({
       resizedRectangles,
       rowConfiguration,
       columnConfiguration,
       rowLimits,
       columnLimits,
-      orientation,
-      isPopupDisplayed: true
+      isPopupDisplayed
     });
   }
 
