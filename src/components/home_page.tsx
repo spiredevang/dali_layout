@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {BASE_LIMITS, LayoutGraph, Limits} from '../graph';
+import {EqualityConstraint} from '../equality_constraint';
 import {Constraint, Rectangle} from '../rectangle';
 import {getConstraint} from '../utilities';
 import {Popup} from './popup';
@@ -12,6 +13,7 @@ interface Properties {}
 interface State {
   rectangles: Rectangle[];
   constraints: string[];
+  equalityConstraints: EqualityConstraint[],
   resizedRectangles: Rectangle[];
   rowConfiguration: Rectangle[][];
   columnConfiguration: Rectangle[][];
@@ -34,6 +36,7 @@ export class HomePage extends React.Component<Properties, State> {
     this.state = {
       rectangles: [],
       constraints: [],
+      equalityConstraints: [],
       resizedRectangles: [],
       rowConfiguration: [],
       columnConfiguration: [],
@@ -207,6 +210,8 @@ export class HomePage extends React.Component<Properties, State> {
       if(rectangles) {
         this.layoutGraph = new LayoutGraph(rectangles);
         const constraints = this.validateConstraints(object.constraints);
+        const equalityConstraints = constraints.map(constraint => 
+          new EqualityConstraint(constraint));
         const resizedRectangles = (this.layoutGraph.ResizedRows.length &&
           this.layoutGraph.ResizedRows.flat()) || this.layoutGraph.ResizedColumns.flat();
         const rowConfiguration = this.layoutGraph.RowConfiguration;
@@ -217,6 +222,7 @@ export class HomePage extends React.Component<Properties, State> {
         this.setState({
           rectangles,
           constraints,
+          equalityConstraints,
           resizedRectangles,
           rowConfiguration,
           columnConfiguration,
@@ -248,7 +254,7 @@ export class HomePage extends React.Component<Properties, State> {
   }
 
   private validateConstraints(object: any) {
-    if(Array.isArray(object)) {
+    if(Array.isArray(object) && object.every(element => typeof element === 'string')) {
       return object;
     } else {
       return [];
