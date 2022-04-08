@@ -13,6 +13,7 @@ interface Properties {
 interface State {
   isWidthEnabled: boolean;
   isHeightEnabled: boolean;
+  isBorderDisplayed: boolean;
   width: number;
   height: number;
 }
@@ -27,6 +28,7 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
     this.state = {
       isWidthEnabled: false,
       isHeightEnabled: false,
+      isBorderDisplayed: true,
       width,
       height
     };
@@ -35,10 +37,11 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
   public render(): JSX.Element {
     const isRow = this.props.orientation === Orientation.ROW;
     const [flexContainerDirection, flexDirection, gap, dim] = (() => {
+      const borderWidth = (this.state.isBorderDisplayed && '1px') || '0';
       if(isRow) {
-        return ['column' as 'column', 'row' as 'row', '1px 0', {width: '100%'}];
+        return ['column' as 'column', 'row' as 'row', `${borderWidth} 0`, {width: '100%'}];
       } else {
-        return ['row' as 'row', 'column' as 'column', '0 1px', {height: '100%'}];
+        return ['row' as 'row', 'column' as 'column', `0 ${borderWidth}`, {height: '100%'}];
       }
     })();
     const [widthLimit, heightLimit] = (() => {
@@ -79,7 +82,9 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
           <div style={FlexLayoutViewer.STYLE.inputGroup}>
             <input type='checkbox' checked={this.state.isWidthEnabled}
               onChange={this.onChangeWidthCheckbox}/>
-            <label htmlFor='width' style={{marginRight: 5}}>Width</label>
+            <label htmlFor='width' style={FlexLayoutViewer.STYLE.label}>
+              Width
+            </label>
             <input
               type='number'
               id='width'
@@ -91,7 +96,9 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
           <div style={FlexLayoutViewer.STYLE.inputGroup}>
             <input type='checkbox' checked={this.state.isHeightEnabled}
               onChange={this.onChangeHeightCheckbox}/>
-            <label htmlFor='height' style={{marginRight: 5}}>Height</label>
+            <label htmlFor='height' style={FlexLayoutViewer.STYLE.label}>
+              Height
+            </label>
             <input
               type='number'
               id='height'
@@ -99,6 +106,13 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
               min={this.props.limits.minimumHeight} 
               max={this.props.limits.maximumHeight} 
               onChange={this.onChangeHeight}/>
+          </div>
+          <div style={FlexLayoutViewer.STYLE.inputGroup}>
+            <input type='checkbox' id='border' checked={this.state.isBorderDisplayed}
+              onChange={this.onToggleBorder}/>
+            <label htmlFor='border' style={FlexLayoutViewer.STYLE.label}>
+              Toggle outline
+            </label>
           </div>
         </div>
       </div>);
@@ -136,6 +150,7 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
             width: rectangle.width,
             height: rectangle.height,
             ...orientationStyle,
+            ...(!this.state.isBorderDisplayed && {borderWidth: 0})
           }}>
         <div style={FlexLayoutViewer.STYLE.borderContainer}
             className={extraStyle}>
@@ -158,6 +173,10 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
 
   private onChangeHeight = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({height: event.target.valueAsNumber});
+  }
+
+  private onToggleBorder = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({isBorderDisplayed: event.target.checked});
   }
 
   private static readonly CONSTRAINT_COLORS = {
@@ -192,16 +211,20 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
       placeItems: 'center'
     } as React.CSSProperties,
     inputContainer: {
-      height: 30,
       display: 'flex',
+      padding: 5,
+      flexDirection: 'column',
       flexWrap: 'wrap',
-      alignItems: 'center',
-      columnGap: 30,
+      alignItems: 'flex-start',
       marginTop: 'auto'
     } as React.CSSProperties,
     inputGroup: {
       display: 'flex',
       alignItems: 'center'
+    } as React.CSSProperties,
+    label: {
+      marginRight: 5,
+      userSelect: 'none'
     } as React.CSSProperties
   };
 }

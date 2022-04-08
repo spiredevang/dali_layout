@@ -163,7 +163,7 @@ export class HomePage extends React.Component<Properties, State> {
           {this.state.isPopupDisplayed && (
             <Popup
                 width={popupWidth}
-                height={popupHeight}
+                height={popupHeight + 75}
                 onClosePopup={this.onCloseLayoutPopup}>
               <FlexLayoutViewer 
                 rectangleMatrix={rectangleMatrix}
