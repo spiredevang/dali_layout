@@ -193,11 +193,16 @@ export class LayoutGraph extends Graph {
     this.rowConfiguration = this.getRowConfiguration();
     this.columnConfiguration = this.getColumnConfiguration();
     this.rowLimits = this.getRowConfigurationLimits(this.rowConfiguration);
-    this.columnLimits = this.getColumnConfigurationLimits(this.columnConfiguration);
-    this.minimumWidth = Math.min(this.rowLimits.minimumWidth, this.columnLimits.minimumWidth);
-    this.minimumHeight = Math.min(this.rowLimits.minimumHeight, this.columnLimits.minimumHeight);
-    this.maximumWidth = Math.max(this.rowLimits.maximumWidth, this.columnLimits.maximumWidth);
-    this.maximumHeight = Math.max(this.rowLimits.maximumHeight, this.columnLimits.maximumHeight);
+    this.columnLimits = this.getColumnConfigurationLimits(
+      this.columnConfiguration);
+    this.minimumWidth = Math.min(
+      this.rowLimits.minimumWidth, this.columnLimits.minimumWidth);
+    this.minimumHeight = Math.min(
+      this.rowLimits.minimumHeight, this.columnLimits.minimumHeight);
+    this.maximumWidth = Math.max(
+      this.rowLimits.maximumWidth, this.columnLimits.maximumWidth);
+    this.maximumHeight = Math.max(
+      this.rowLimits.maximumHeight, this.columnLimits.maximumHeight);
     if(!this.rowConfiguration.length) {
       this.fixUnalignedRows();
     }
@@ -208,8 +213,10 @@ export class LayoutGraph extends Graph {
 
   private generateEdges() {
     Object.entries(this.nodesObject).forEach(([nodeKey, node]) => {
-      this.boundaryX = Math.max(node.Rectangle.left + node.Rectangle.width, this.boundaryX);
-      this.boundaryY = Math.max(node.Rectangle.top + node.Rectangle.height, this.boundaryY);
+      this.boundaryX = Math.max(
+        node.Rectangle.left + node.Rectangle.width, this.boundaryX);
+      this.boundaryY = Math.max(
+        node.Rectangle.top + node.Rectangle.height, this.boundaryY);
       const nodeLeft = node.Rectangle.left;
       const nodeRight = node.Rectangle.left + node.Rectangle.width;
       const nodeTop = node.Rectangle.top;
@@ -300,7 +307,8 @@ export class LayoutGraph extends Graph {
       const currentNode = this.nodesObject[currentNodeKey];
       if(this.isRightNodeAligned(currentNode)) {
         leftNodes.push(currentNodeKey);
-        currentNodeKey = this.horizontalEdges[currentNode.BottomEdges[0]]?.nodes[1];
+        currentNodeKey =
+          this.horizontalEdges[currentNode.BottomEdges[0]]?.nodes[1];
       } else {
         leftNodes = [];
         break;
@@ -312,14 +320,16 @@ export class LayoutGraph extends Graph {
       const row = [leftNode];
       let currentNode = this.nodesObject[leftNode];
       while(currentNode?.RightEdges.length) {
-        currentNodeKey = this.verticalEdges[currentNode.RightEdges[0]].nodes[1];
+        currentNodeKey =
+          this.verticalEdges[currentNode.RightEdges[0]].nodes[1];
         currentNode = this.nodesObject[currentNodeKey];
         row.push(currentNodeKey);
       }
       nodeCount += row.length;
       configuration.push(row);
     });
-    return nodeCount !== Object.keys(this.nodesObject).length ? [] : configuration;
+    return nodeCount !== Object.keys(this.nodesObject).length ? [] :
+      configuration;
   }
 
   private isRightNodeAligned(currentNode: LayoutNode) {
@@ -331,7 +341,8 @@ export class LayoutGraph extends Graph {
     const rightEdge = this.verticalEdges[currentNode.RightEdges[0]];
     const rightNode = this.nodesObject[rightEdge.nodes[1]];
     const currTop = currentNode.Rectangle.top;
-    const currBottom = currentNode.Rectangle.top + currentNode.Rectangle.height;
+    const currBottom = currentNode.Rectangle.top +
+      currentNode.Rectangle.height;
     const rightTop = rightNode.Rectangle.top;
     const rightBottom = rightNode.Rectangle.top + rightNode.Rectangle.height;
     if(currTop === rightTop && currBottom === rightBottom) {
@@ -351,7 +362,8 @@ export class LayoutGraph extends Graph {
       const currentNode = this.nodesObject[currentNodeKey];
       if(this.isBottomNodeAligned(currentNode)) {
         topNodes.push(currentNodeKey);
-        currentNodeKey = this.verticalEdges[currentNode.RightEdges[0]]?.nodes[1];
+        currentNodeKey =
+          this.verticalEdges[currentNode.RightEdges[0]]?.nodes[1];
       } else {
         topNodes = [];
         break;
@@ -363,14 +375,16 @@ export class LayoutGraph extends Graph {
       const column = [topNode];
       let currentNode = this.nodesObject[topNode];
       while(currentNode?.BottomEdges.length) {
-        currentNodeKey = this.horizontalEdges[currentNode.BottomEdges[0]].nodes[1];
+        currentNodeKey =
+          this.horizontalEdges[currentNode.BottomEdges[0]].nodes[1];
         currentNode = this.nodesObject[currentNodeKey];
         column.push(currentNodeKey);
       }
       nodeCount += column.length;
       configuration.push(column);
     });
-    return nodeCount !== Object.keys(this.nodesObject).length ? [] : configuration;
+    return nodeCount !== Object.keys(this.nodesObject).length ? [] :
+      configuration;
   }
 
   private isBottomNodeAligned(currentNode: LayoutNode) {
@@ -412,9 +426,11 @@ export class LayoutGraph extends Graph {
       let maximumHeight = MAX_SIZE;
       row.forEach(nodeKey => {
         minimumWidth += this.nodesObject[nodeKey].minimumWidth;
-        minimumHeight = Math.max(minimumHeight, this.nodesObject[nodeKey].minimumHeight);
+        minimumHeight = Math.max(
+          minimumHeight, this.nodesObject[nodeKey].minimumHeight);
         maximumWidth += this.nodesObject[nodeKey].maximumWidth;
-        maximumHeight = Math.min(maximumHeight, this.nodesObject[nodeKey].maximumHeight);
+        maximumHeight = Math.min(
+          maximumHeight, this.nodesObject[nodeKey].maximumHeight);
       });
       minimumRowWidths.push(minimumWidth);
       minimumRowHeights.push(minimumHeight);
@@ -422,7 +438,8 @@ export class LayoutGraph extends Graph {
       maximumRowHeights.push(maximumHeight);
     });
     const minimumWidth = Math.max(...minimumRowWidths);
-    const minimumHeight = minimumRowHeights.reduce((sum, height) => sum + height, 0);
+    const minimumHeight = minimumRowHeights.reduce(
+      (sum, height) => sum + height, 0);
     const maximumWidth = Math.min(...maximumRowWidths, MAX_SIZE);
     const maximumHeight = Math.min(MAX_SIZE,
       maximumRowHeights.reduce((sum, height) => sum + height, 0));
@@ -449,9 +466,11 @@ export class LayoutGraph extends Graph {
       let maximumWidth = MAX_SIZE;
       column.forEach(node => {
         minimumHeight += this.nodesObject[node].minimumHeight;
-        minimumWidth = Math.max(minimumWidth, this.nodesObject[node].minimumWidth);
+        minimumWidth = Math.max(
+          minimumWidth, this.nodesObject[node].minimumWidth);
         maximumHeight += this.nodesObject[node].maximumHeight;
-        maximumWidth = Math.min(maximumWidth, this.nodesObject[node].maximumWidth);
+        maximumWidth = Math.min(
+          maximumWidth, this.nodesObject[node].maximumWidth);
       });
       minimumColumnHeights.push(minimumHeight);
       minimumColumnWidths.push(minimumWidth);
@@ -459,7 +478,8 @@ export class LayoutGraph extends Graph {
       maximumColumnWidths.push(maximumWidth);
     });
     const minimumHeight = Math.max(...minimumColumnHeights);
-    const minimumWidth = minimumColumnWidths.reduce((sum, width) => sum + width, 0);
+    const minimumWidth = minimumColumnWidths.reduce(
+      (sum, width) => sum + width, 0);
     const maximumHeight = Math.min(...maximumColumnHeights, MAX_SIZE);
     const maximumWidth = Math.min(MAX_SIZE,
       maximumColumnWidths.reduce((sum, width) => sum + width, 0));
@@ -481,7 +501,8 @@ export class LayoutGraph extends Graph {
       const nodeKeys = ['0-0'];
       let currentNode = originNode;
       while(currentNode?.BottomEdges.length) {
-        const currentNodeKey = this.horizontalEdges[currentNode.BottomEdges[0]].nodes[1];
+        const currentNodeKey =
+          this.horizontalEdges[currentNode.BottomEdges[0]].nodes[1];
         currentNode = this.nodesObject[currentNodeKey];
         nodeKeys.push(currentNodeKey);
       }
@@ -509,7 +530,8 @@ export class LayoutGraph extends Graph {
         }
         rowConfiguration.push(row);
       });
-      if(Object.keys(visitedNodes).length === Object.keys(this.nodesObject).length) {
+      if(Object.keys(visitedNodes).length ===
+          Object.keys(this.nodesObject).length) {
         return rowConfiguration;
       }
     }
@@ -542,8 +564,10 @@ export class LayoutGraph extends Graph {
             areFixedHeightsEqual = false;
             break;
           }
-        } else if(nodeRow[j].Rectangle.verticalPolicy === Constraint.FILL_SPACE) {
-          minimumFlexibleHeight = Math.min(minimumFlexibleHeight, nodeRow[j].Rectangle.height)
+        } else if(nodeRow[j].Rectangle.verticalPolicy ===
+            Constraint.FILL_SPACE) {
+          minimumFlexibleHeight = Math.min(
+            minimumFlexibleHeight, nodeRow[j].Rectangle.height)
         }
       };
       if(!areFixedHeightsEqual || !compressableWidth) {
@@ -551,8 +575,8 @@ export class LayoutGraph extends Graph {
       }
       const rectRow = [] as Rectangle[];
       const rowHeight = fixedHeight || minimumFlexibleHeight;
-      const [minHeight, maxHeight] = (fixedHeight > 0 && [fixedHeight, fixedHeight]) ||
-        [0, MAX_SIZE];
+      const [minHeight, maxHeight] = (fixedHeight > 0 &&
+        [fixedHeight, fixedHeight]) || [0, MAX_SIZE];
       minimumRowHeights.push(minHeight);
       maximumRowHeights.push(maxHeight);
       let left = 0;
@@ -608,7 +632,8 @@ export class LayoutGraph extends Graph {
       const nodeKeys = ['0-0'];
       let currentNode = originNode;
       while(currentNode?.RightEdges.length) {
-        const currentNodeKey = this.verticalEdges[currentNode.RightEdges[0]].nodes[1];
+        const currentNodeKey =
+          this.verticalEdges[currentNode.RightEdges[0]].nodes[1];
         currentNode = this.nodesObject[currentNodeKey];
         nodeKeys.push(currentNodeKey);
       }
@@ -636,7 +661,8 @@ export class LayoutGraph extends Graph {
         }
         columnConfiguration.push(column);
       });
-      if(Object.keys(visitedNodes).length === Object.keys(this.nodesObject).length) {
+      if(Object.keys(visitedNodes).length ===
+          Object.keys(this.nodesObject).length) {
         return columnConfiguration;
       }
     }
@@ -669,8 +695,10 @@ export class LayoutGraph extends Graph {
             areFixedWidthsEqual = false;
             break;
           }
-        } else if(nodeColumn[j].Rectangle.horizontalPolicy === Constraint.FILL_SPACE) {
-          minimumFlexibleWidth = Math.min(minimumFlexibleWidth, nodeColumn[j].Rectangle.width)
+        } else if(nodeColumn[j].Rectangle.horizontalPolicy ===
+            Constraint.FILL_SPACE) {
+          minimumFlexibleWidth = Math.min(
+            minimumFlexibleWidth, nodeColumn[j].Rectangle.width)
         }
       };
       if(!areFixedWidthsEqual || !compressableHeight) {
@@ -678,12 +706,13 @@ export class LayoutGraph extends Graph {
       }
       const rectColumn = [] as Rectangle[];
       const columnWidth = fixedWidth || minimumFlexibleWidth;
-      const [minWidth, maxWidth] = (fixedWidth > 0 && [fixedWidth, fixedWidth]) ||
-        [0, MAX_SIZE];
+      const [minWidth, maxWidth] = (fixedWidth > 0 && [fixedWidth, fixedWidth])
+        || [0, MAX_SIZE];
       minimumColumnWidths.push(minWidth);
       maximumColumnWidths.push(maxWidth);
       let top = 0;
-      const left = updatedRectangles[i - 1] ? (updatedRectangles[i - 1][0].left +
+      const left = updatedRectangles[i - 1] ?
+        (updatedRectangles[i - 1][0].left +
         updatedRectangles[i - 1][0].width) : 0;
       nodeColumn.forEach(node => {
         const rect = {...node.Rectangle, left, top, width: columnWidth};

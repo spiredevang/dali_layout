@@ -71,7 +71,8 @@ export class HomePage extends React.Component<Properties, State> {
         return [width * 1.2 , height];
       }
     })();
-    const layoutToggleText = this.state.isOriginalLayoutDisplayed ? 'resized' : 'original'
+    const layoutToggleText =
+      (this.state.isOriginalLayoutDisplayed &&'resized') || 'original';
     return (
       <div style={HomePage.STYLE.container}>
         <h1>Layout Application</h1>
@@ -87,7 +88,9 @@ export class HomePage extends React.Component<Properties, State> {
               <option value='narrow_grid_3x3.json'>Narrow Grid (3x3)</option>
               <option value='long_grid_3x3.json'>Long Grid (3x3)</option>
               <option value='wide_grid_3x3.json'>Wide Grid (3x3)</option>
-              <option value='unaligned_grid_3x3.json'>Unaligned Grid (3x3)</option>
+              <option value='unaligned_grid_3x3.json'>
+                Unaligned Grid (3x3)
+              </option>
               <option value='arthur.json'>Arthur</option>
               <option value='darryl.json'>Darryl</option>
               <option value='jess.json'>Jess</option>
@@ -95,7 +98,8 @@ export class HomePage extends React.Component<Properties, State> {
               <option value='test.json'>Test</option>
             </select>
           </div>
-          <input type='file' style={{flexGrow: 1}} onChange={this.onFileChange}/>
+          <input type='file' style={{flexGrow: 1}}
+            onChange={this.onFileChange}/>
           {this.state.resizedRectangles.length > 0 &&
             <button onClick={this.toggleResizedLayout}
                 style={{marginRight: 50}}>
@@ -213,11 +217,13 @@ export class HomePage extends React.Component<Properties, State> {
         const equalityConstraints = constraints.map(constraint => 
           new EqualityConstraint(constraint));
         const resizedRectangles = (this.layoutGraph.ResizedRows.length &&
-          this.layoutGraph.ResizedRows.flat()) || this.layoutGraph.ResizedColumns.flat();
+          this.layoutGraph.ResizedRows.flat()) ||
+          this.layoutGraph.ResizedColumns.flat();
         const rowConfiguration = this.layoutGraph.RowConfiguration;
         const columnConfiguration = this.layoutGraph.ColumnConfiguration;
         const rowLimits = this.layoutGraph.RowLimits;
-        const orientation = rowConfiguration.length ? Orientation.ROW : Orientation.COLUMN;
+        const orientation = rowConfiguration.length ? Orientation.ROW :
+          Orientation.COLUMN;
         const columnLimits = this.layoutGraph.ColumnLimits;
         this.setState({
           rectangles,
@@ -237,9 +243,12 @@ export class HomePage extends React.Component<Properties, State> {
   private getRectangle(object: any) {
     const horizontalPolicy = getConstraint(object?.horizontalPolicy);
     const verticalPolicy = getConstraint(object?.verticalPolicy);
-    if(typeof object?.name === 'string' && typeof object?.width === 'number' &&
-        typeof object?.height === 'number' && typeof object?.left === 'number' &&
-        typeof object?.top === 'number' && horizontalPolicy !== null &&
+    if(typeof object?.name === 'string' &&
+        typeof object?.width === 'number' &&
+        typeof object?.height === 'number' &&
+        typeof object?.left === 'number' &&
+        typeof object?.top === 'number' &&
+        horizontalPolicy !== null &&
         verticalPolicy !== null) {
       return {
         name: object.name,
@@ -254,7 +263,8 @@ export class HomePage extends React.Component<Properties, State> {
   }
 
   private validateConstraints(object: any) {
-    if(Array.isArray(object) && object.every(element => typeof element === 'string')) {
+    if(Array.isArray(object) && object.every(
+        element => typeof element === 'string')) {
       return object;
     } else {
       return [];
@@ -288,20 +298,23 @@ export class HomePage extends React.Component<Properties, State> {
     }
   }
 
-  private onOrientationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({orientation: +event.target.value});
+  private onOrientationChange = (
+      event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({orientation: event.target.valueAsNumber});
   }
 
   private onOpenLayoutPopup = () => {
     this.layoutGraph = new LayoutGraph(this.state.rectangles);
     const resizedRectangles = (this.layoutGraph.ResizedRows.length &&
-      this.layoutGraph.ResizedRows.flat()) || this.layoutGraph.ResizedColumns.flat();
+      this.layoutGraph.ResizedRows.flat()) ||
+      this.layoutGraph.ResizedColumns.flat();
     const rowConfiguration = this.layoutGraph.RowConfiguration;
     const columnConfiguration = this.layoutGraph.ColumnConfiguration;
     const rowLimits = this.layoutGraph.RowLimits;
     const columnLimits = this.layoutGraph.ColumnLimits;
     const isPopupDisplayed = ((this.state.orientation === Orientation.ROW) &&
-      rowConfiguration.length > 0) || ((this.state.orientation === Orientation.COLUMN)
+      rowConfiguration.length > 0) ||
+      ((this.state.orientation === Orientation.COLUMN)
       && columnConfiguration.length > 0)
     this.setState({
       resizedRectangles,
@@ -318,7 +331,9 @@ export class HomePage extends React.Component<Properties, State> {
   }
 
   private toggleResizedLayout = () => {
-    this.setState({isOriginalLayoutDisplayed: !this.state.isOriginalLayoutDisplayed});
+    this.setState({
+      isOriginalLayoutDisplayed: !this.state.isOriginalLayoutDisplayed
+    });
   }
 
   private onDownloadJSON = () => {

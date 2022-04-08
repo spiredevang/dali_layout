@@ -8,8 +8,8 @@ interface Properties {
 }
 
 interface State {
-  el: any;
-  win: Window;
+  container: any;
+  popupWindow: Window;
 }
 
 /** The popup component. */
@@ -21,29 +21,30 @@ export class Popup extends React.Component<Properties, State> {
 
   constructor(props: Properties) {
     super(props);
-    this.state = {el: null, win: window};
+    this.state = {container: null, popupWindow: window};
   }
 
   public render(): JSX.Element {
-    if(!this.state.el) {
+    if(!this.state.container) {
       return <></>;
     } 
-    return ReactDOM.createPortal(this.props.children, this.state.el);  
+    return ReactDOM.createPortal(this.props.children, this.state.container);  
   }
 
   public componentDidMount(): void {
     const {width, height} = this.props;
-    const win = this.state.win.open('', '', `width=${width},height=${height}`) as Window;
-    const el = document.createElement('div');
-    win.document.body.appendChild(el);
-    this.setState({el, win});
-    win.addEventListener('beforeunload', this.props.onClosePopup);
-    copyStyles(document, win.document);
-    el.setAttribute('style', 'height: 100%;');
+    const popupWindow = this.state.popupWindow.open(
+      '', '', `width=${width},height=${height}`) as Window;
+    const container = document.createElement('div');
+    popupWindow.document.body.appendChild(container);
+    this.setState({container, popupWindow});
+    popupWindow.addEventListener('beforeunload', this.props.onClosePopup);
+    copyStyles(document, popupWindow.document);
+    container.setAttribute('style', 'height: 100%;');
   }
 
   public componentWillUnmount(): void {
-    this.state.win.close();
+    this.state.popupWindow.close();
   }
 }
 

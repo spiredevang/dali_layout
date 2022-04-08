@@ -24,7 +24,9 @@ export class EqualityConstraint {
     this.text = trimmedConstraint;
     this.property = property;
     this.postfixNotation = getPostfixfromInfix(infixNotation);
-    console.log('input: ', this.text, '| postfix notation: ', this.postfixNotation,
+    console.log(
+      'input: ', this.text,
+      '| postfix notation: ',this.postfixNotation,
       '| affected properties: ', this.AffectedProperties);
   }
 
@@ -48,6 +50,10 @@ export class EqualityConstraint {
       }
     });
     return properties;
+  }
+
+  public evaluate(): number[] {
+    return EvaluatePostFix(this.postfixNotation);
   }
 
   private text: string;
@@ -131,7 +137,7 @@ function getPostfixfromInfix(infix: string) {
       operatorStack.push(token);
     } else if(token === ')') {
       infix = infix.slice(1);
-      while(operatorStack.peek() != '(') {
+      while(operatorStack.peek() !== '(') {
         postfix.push(operatorStack.pop());
       }
       operatorStack.pop();
