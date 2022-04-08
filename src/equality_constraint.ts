@@ -21,6 +21,7 @@ export class EqualityConstraint {
   public constructor(constraint: string) {
     const trimmedConstraint = constraint.replace(/\s+/g, '');
     const [property, infixNotation] = trimmedConstraint.split('=');
+    this.text = trimmedConstraint;
     this.property = property;
     this.postfixNotation = getPostfixfromInfix(infixNotation);
   }
@@ -29,10 +30,25 @@ export class EqualityConstraint {
     return this.property;
   }
 
+  public get Text(): string {
+    return this.text;
+  }
+
   public get PostfixNotation(): (string|number)[] {
     return this.postfixNotation;
   }
 
+  public get AffectedProperties(): string[] {
+    const properties = [this.property.split('.')[0]];
+    this.postfixNotation.forEach(token => {
+      if((typeof token === 'string') && token.length > 1) {
+        properties.push(token.split('.')[0]);
+      }
+    });
+    return properties;
+  }
+
+  private text: string;
   private property: string;
   private postfixNotation: (string|number)[];
 }
