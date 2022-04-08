@@ -81,5 +81,10 @@
       "horizontalPolicy": "fill_space",
       "verticalPolicy": "fill_space"
     }
+  ],
+  "constraints": [
+    "A.width = 2 * B.width",
+    "F.width = E.width / 2",
+    "C.width = D.width + 100"
   ]
 }
