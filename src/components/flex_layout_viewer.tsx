@@ -22,9 +22,12 @@ interface State {
 export class FlexLayoutViewer extends React.Component<Properties, State> {
   constructor(props: Properties) {
     super(props);
-    const {minimumWidth, minimumHeight, maximumWidth, maximumHeight} = this.props.limits;
-    const width = minimumWidth === maximumWidth ? minimumWidth : minimumWidth * 1.2;
-    const height = minimumHeight === maximumHeight ? minimumHeight : minimumHeight * 1.2;
+    const {minimumWidth, minimumHeight, maximumWidth, maximumHeight} =
+      this.props.limits;
+    const width = minimumWidth === maximumWidth ? minimumWidth :
+      minimumWidth * 1.2;
+    const height = minimumHeight === maximumHeight ? minimumHeight :
+      minimumHeight * 1.2;
     this.state = {
       isWidthEnabled: false,
       isHeightEnabled: false,
@@ -39,14 +42,17 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
     const [flexContainerDirection, flexDirection, gap, dim] = (() => {
       const borderWidth = (this.state.isBorderDisplayed && '1px') || '0';
       if(isRow) {
-        return ['column' as 'column', 'row' as 'row', `${borderWidth} 0`, {width: '100%'}];
+        return ['column' as 'column', 'row' as 'row', `${borderWidth} 0`,
+          {width: '100%'}];
       } else {
-        return ['row' as 'row', 'column' as 'column', `0 ${borderWidth}`, {height: '100%'}];
+        return ['row' as 'row', 'column' as 'column', `0 ${borderWidth}`,
+          {height: '100%'}];
       }
     })();
     const [widthLimit, heightLimit] = (() => {
       if(this.props.limits) {
-        const {minimumWidth, minimumHeight, maximumWidth, maximumHeight} = this.props.limits;
+        const {minimumWidth, minimumHeight, maximumWidth, maximumHeight} =
+          this.props.limits;
         const width = `clamp(${minimumWidth}px, 100%, ${maximumWidth}px)`;
         const height = `clamp(${minimumHeight}px, 100%, ${maximumHeight}px)`;
         return [width, height];
@@ -55,7 +61,8 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
       }
     })();
     const width = this.state.isWidthEnabled ? this.state.width : widthLimit;
-    const height = this.state.isHeightEnabled ? this.state.height : heightLimit;
+    const height = this.state.isHeightEnabled ? this.state.height :
+      heightLimit;
     return (
       <div style={FlexLayoutViewer.STYLE.wrapper}>
         <div style={{...FlexLayoutViewer.STYLE.container, width, height,
@@ -73,7 +80,8 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
               }
             })();
             return (
-              <div style={{display: 'flex', flexDirection, flex, ...dim}} key={index}>
+              <div key={index}
+                  style={{display: 'flex', flexDirection, flex, ...dim}}>
                 {set.map(this.renderRectangle)}
               </div>);
           })}
@@ -108,7 +116,8 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
               onChange={this.onChangeHeight}/>
           </div>
           <div style={FlexLayoutViewer.STYLE.inputGroup}>
-            <input type='checkbox' id='border' checked={this.state.isBorderDisplayed}
+            <input type='checkbox' id='border'
+              checked={this.state.isBorderDisplayed}
               onChange={this.onToggleBorder}/>
             <label htmlFor='border' style={FlexLayoutViewer.STYLE.label}>
               Toggle outline
@@ -122,10 +131,13 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
     const isConstraintUniform = rectangle.horizontalPolicy ===
       rectangle.verticalPolicy;
     const backgroundColor = (isConstraintUniform &&
-      FlexLayoutViewer.CONSTRAINT_COLORS[rectangle.horizontalPolicy]) || '#F5F5F5';
+      FlexLayoutViewer.CONSTRAINT_COLORS[rectangle.horizontalPolicy]) ||
+      '#F5F5F5';
     const extraStyle = getRectangleBorderStyles(rectangle);
-    const isWidthFlexible = rectangle.horizontalPolicy === Constraint.FILL_SPACE;
-    const isHeightFlexible = rectangle.verticalPolicy === Constraint.FILL_SPACE;
+    const isWidthFlexible =
+      rectangle.horizontalPolicy === Constraint.FILL_SPACE;
+    const isHeightFlexible =
+      rectangle.verticalPolicy === Constraint.FILL_SPACE;
     const orientationStyle = (() => {
       if(this.props.orientation === Orientation.ROW) {
         return {
@@ -159,7 +171,8 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
       </div>);
   }
 
-  private onChangeWidthCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
+  private onChangeWidthCheckbox = (
+      event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({isWidthEnabled: event.target.checked});
   }
 
@@ -167,7 +180,8 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
     this.setState({width: event.target.valueAsNumber});
   }
 
-  private onChangeHeightCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
+  private onChangeHeightCheckbox = (
+      event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({isHeightEnabled: event.target.checked});
   }
 
