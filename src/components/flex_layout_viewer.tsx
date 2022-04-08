@@ -60,12 +60,12 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
         return ['100%, 100%'];
       }
     })();
-    const width = this.state.isWidthEnabled ? this.state.width : widthLimit;
-    const height = this.state.isHeightEnabled ? this.state.height :
-      heightLimit;
+    const maxWidth = this.state.isWidthEnabled ? this.state.width : widthLimit;
+    const maxHeight = this.state.isHeightEnabled ?
+      this.state.height : heightLimit;
     return (
       <div style={FlexLayoutViewer.STYLE.wrapper}>
-        <div style={{...FlexLayoutViewer.STYLE.container, width, height,
+        <div style={{...FlexLayoutViewer.STYLE.container, maxWidth, maxHeight,
             flexDirection: flexContainerDirection, gap}}>
           {this.props.rectangleMatrix?.map((set, index) => {
             const isWidthFlexible = set.every(rect =>
@@ -91,7 +91,7 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
             <input type='checkbox' checked={this.state.isWidthEnabled}
               onChange={this.onChangeWidthCheckbox}/>
             <label htmlFor='width' style={FlexLayoutViewer.STYLE.label}>
-              Width
+              Max width
             </label>
             <input
               type='number'
@@ -105,7 +105,7 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
             <input type='checkbox' checked={this.state.isHeightEnabled}
               onChange={this.onChangeHeightCheckbox}/>
             <label htmlFor='height' style={FlexLayoutViewer.STYLE.label}>
-              Height
+              Max height
             </label>
             <input
               type='number'

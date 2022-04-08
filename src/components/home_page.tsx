@@ -300,7 +300,7 @@ export class HomePage extends React.Component<Properties, State> {
 
   private onOrientationChange = (
       event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({orientation: event.target.valueAsNumber});
+    this.setState({orientation: +event.target.value});
   }
 
   private onOpenLayoutPopup = () => {
