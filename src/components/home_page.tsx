@@ -346,7 +346,7 @@ export class HomePage extends React.Component<Properties, State> {
         verticalPolicy: Constraint[rectangle.verticalPolicy]
       }));
     const data = {layout, constraints: this.state.constraints};
-    const file = new Blob([JSON.stringify(data)], {type: 'application/json'});
+    const file = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
     const anchor = document.createElement('a');
     anchor.href = URL.createObjectURL(file);
     anchor.download = 'layout.json';
