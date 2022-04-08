@@ -166,9 +166,13 @@ export class LayoutNode extends Node {
 export class LayoutGraph extends Graph {
   public constructor(rectangles: Rectangle[]) {
     super();
+    this.namesObject = {};
     this.nodesObject = rectangles.reduce((nodesObject, rectangle) => {
-      nodesObject[`${rectangle.left}-${rectangle.top}`] =
-        new LayoutNode(rectangle);
+      const key = `${rectangle.left}-${rectangle.top}`;
+      if(rectangle.name) {
+        this.namesObject[rectangle.name] = key;
+      }
+      nodesObject[key] = new LayoutNode(rectangle);
       return nodesObject;
     }, {} as {[key: string]: LayoutNode});
     this.horizontalEdges = {};
@@ -775,6 +779,7 @@ export class LayoutGraph extends Graph {
   }
 
   private nodesObject: {[key: string]: LayoutNode};
+  private namesObject: {[key: string]: string};
   private rowConfiguration: string[][];
   private columnConfiguration: string[][];
   private resizedRows: Rectangle[][];
