@@ -24,6 +24,8 @@ export class EqualityConstraint {
     this.text = trimmedConstraint;
     this.property = property;
     this.postfixNotation = getPostfixfromInfix(infixNotation);
+    console.log('input: ', this.text, '| postfix notation: ', this.postfixNotation,
+      '| affected properties: ', this.AffectedProperties);
   }
 
   public get Property(): string {
