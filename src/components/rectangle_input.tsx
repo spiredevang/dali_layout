@@ -11,7 +11,7 @@ interface Properties {
   onUpdate: (rectangles: Rectangle[]) => void;
 }
 
-type Direction = 'horizontalPolicy' | 'verticalPolicy';
+type Direction = 'horizontal' | 'vertical';
 
 /** A input field for a list of rectangles. */
 export class RectanglesInput extends React.Component<Properties> {
@@ -53,18 +53,18 @@ export class RectanglesInput extends React.Component<Properties> {
             onChange={this.onChangeTop(index)}/>
         </div>
         <div style={RectanglesInput.STYLE.field}>
-          <label htmlFor={`horizontalPolicy${index}`}>Horizontal policy</label>
-          <select onChange={this.onChangeConstraint(index)('horizontalPolicy')}
-              value={Constraint[rectangle.horizontalPolicy]}>
+          <label htmlFor={`horizontal${index}`}>Horizontal policy</label>
+          <select onChange={this.onChangeConstraint(index)('horizontal')}
+              value={Constraint[rectangle.horizontal]}>
             <option key={0} value={Constraint[0]}>{Constraint[0]}</option>
             <option key={1} value={Constraint[1]}>{Constraint[1]}</option>
             <option key={2} value={Constraint[2]}>{Constraint[2]}</option>
           </select>
         </div>
         <div style={RectanglesInput.STYLE.field}>
-          <label htmlFor={`verticalPolicy${index}`}>Vertical policy</label>
-          <select onChange={this.onChangeConstraint(index)('verticalPolicy')}
-              value={Constraint[rectangle.verticalPolicy]}>
+          <label htmlFor={`vertical${index}`}>Vertical policy</label>
+          <select onChange={this.onChangeConstraint(index)('vertical')}
+              value={Constraint[rectangle.vertical]}>
             <option key={0} value={Constraint[0]}>{Constraint[0]}</option>
             <option key={1} value={Constraint[1]}>{Constraint[1]}</option>
             <option key={2} value={Constraint[2]}>{Constraint[2]}</option>

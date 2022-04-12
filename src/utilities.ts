@@ -21,18 +21,18 @@ const CONSTRAINT_COLORS = {
 };
 
 export function getRectangleBorderStyles(rectangle: Rectangle) {
-  const isConstraintUniform = rectangle.horizontalPolicy ===
-    rectangle.verticalPolicy;
+  const isConstraintUniform = rectangle.horizontal ===
+    rectangle.vertical;
   if(isConstraintUniform) {
     return '';
   }
-  const mainConstraint = (rectangle.horizontalPolicy === Constraint.FIXED)
-    || (rectangle.verticalPolicy === Constraint.FIXED) ? Constraint.FIXED :
+  const mainConstraint = (rectangle.horizontal === Constraint.FIXED)
+    || (rectangle.vertical === Constraint.FIXED) ? Constraint.FIXED :
     Constraint.FILL_SPACE;
   const mainColor = CONSTRAINT_COLORS[mainConstraint];
-  if(rectangle.horizontalPolicy === mainConstraint) {
+  if(rectangle.horizontal === mainConstraint) {
     const secondColor = CONSTRAINT_COLORS[
-      rectangle.verticalPolicy];
+      rectangle.vertical];
     const extraStyles = StyleSheet.create({
       rectangle: {
         border: `8px solid ${mainColor}`,
@@ -57,7 +57,7 @@ export function getRectangleBorderStyles(rectangle: Rectangle) {
     return css(extraStyles.rectangle);
   } else {
     const secondColor = CONSTRAINT_COLORS[
-      rectangle.horizontalPolicy];
+      rectangle.horizontal];
     const extraStyles = StyleSheet.create({
       rectangle: {
         border: `8px solid ${mainColor}`,

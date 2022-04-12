@@ -16,10 +16,10 @@ export class LayoutViewer extends React.Component<Properties> {
   }
 
   private renderRectangle(rectangle: Rectangle, index: number) {
-    const isConstraintUniform = rectangle.horizontalPolicy ===
-      rectangle.verticalPolicy;
+    const isConstraintUniform = rectangle.horizontal ===
+      rectangle.vertical;
     const backgroundColor = (isConstraintUniform &&
-      LayoutViewer.CONSTRAINT_COLORS[rectangle.horizontalPolicy]) || '#F5F5F5';
+      LayoutViewer.CONSTRAINT_COLORS[rectangle.horizontal]) || '#F5F5F5';
     const extraStyle = getRectangleBorderStyles(rectangle);
     const nonUniformStyle = isConstraintUniform && {} || {
       margin: 1,

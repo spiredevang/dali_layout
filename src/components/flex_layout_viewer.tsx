@@ -69,9 +69,9 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
             flexDirection: flexContainerDirection, gap}}>
           {this.props.rectangleMatrix?.map((set, index) => {
             const isWidthFlexible = set.every(rect =>
-              rect.horizontalPolicy === Constraint.FILL_SPACE);
+              rect.horizontal === Constraint.FILL_SPACE);
             const isHeightFlexible = set.every(rect =>
-              rect.verticalPolicy === Constraint.FILL_SPACE);
+              rect.vertical === Constraint.FILL_SPACE);
             const flex = (() => {
               if(isRow) {
                 return (isHeightFlexible && '1 1 auto') || '0 0 auto';
@@ -128,16 +128,16 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
   }
 
   private renderRectangle = (rectangle: Rectangle, index: number) => {
-    const isConstraintUniform = rectangle.horizontalPolicy ===
-      rectangle.verticalPolicy;
+    const isConstraintUniform = rectangle.horizontal ===
+      rectangle.vertical;
     const backgroundColor = (isConstraintUniform &&
-      FlexLayoutViewer.CONSTRAINT_COLORS[rectangle.horizontalPolicy]) ||
+      FlexLayoutViewer.CONSTRAINT_COLORS[rectangle.horizontal]) ||
       '#F5F5F5';
     const extraStyle = getRectangleBorderStyles(rectangle);
     const isWidthFlexible =
-      rectangle.horizontalPolicy === Constraint.FILL_SPACE;
+      rectangle.horizontal === Constraint.FILL_SPACE;
     const isHeightFlexible =
-      rectangle.verticalPolicy === Constraint.FILL_SPACE;
+      rectangle.vertical === Constraint.FILL_SPACE;
     const orientationStyle = (() => {
       if(this.props.orientation === Orientation.ROW) {
         return {

@@ -6,8 +6,8 @@
       "height": 128,
       "left": 0,
       "top": 0,
-      "horizontalPolicy": "fill_space",
-      "verticalPolicy": "fixed"
+      "horizontal": "fill_space",
+      "vertical": "fixed"
     },
     {
       "name": "B",
@@ -15,8 +15,8 @@
       "height": 224,
       "left": 0,
       "top": 128,
-      "horizontalPolicy": "fill_space",
-      "verticalPolicy": "fixed"
+      "horizontal": "fill_space",
+      "vertical": "fixed"
     },
     {
       "name": "C",
@@ -24,8 +24,8 @@
       "height": 160,
       "left": 0,
       "top": 352,
-      "horizontalPolicy": "fill_space",
-      "verticalPolicy": "fixed"
+      "horizontal": "fill_space",
+      "vertical": "fixed"
     },
     {
       "name": "D",
@@ -33,8 +33,8 @@
       "height": 304,
       "left": 0,
       "top": 512,
-      "horizontalPolicy": "fill_space",
-      "verticalPolicy": "fixed"
+      "horizontal": "fill_space",
+      "vertical": "fixed"
     },
     {
       "name": "",
@@ -42,8 +42,8 @@
       "height": 264,
       "left": 0,
       "top": 816,
-      "horizontalPolicy": "fill_space",
-      "verticalPolicy": "fill_space"
+      "horizontal": "fill_space",
+      "vertical": "fill_space"
     },
     {
       "name": "E",
@@ -51,8 +51,8 @@
       "height": 224,
       "left": 226,
       "top": 0,
-      "horizontalPolicy": "fill_space",
-      "verticalPolicy": "fixed"
+      "horizontal": "fill_space",
+      "vertical": "fixed"
     },
     {
       "name": "F",
@@ -60,8 +60,8 @@
       "height": 224,
       "left": 226,
       "top": 224,
-      "horizontalPolicy": "fill_space",
-      "verticalPolicy": "fixed"
+      "horizontal": "fill_space",
+      "vertical": "fixed"
     },
     {
       "name": "G",
@@ -69,8 +69,8 @@
       "height": 480,
       "left": 226,
       "top": 448,
-      "horizontalPolicy": "fill_space",
-      "verticalPolicy": "fixed"
+      "horizontal": "fill_space",
+      "vertical": "fixed"
     },
     {
       "name": "",
@@ -78,8 +78,8 @@
       "height": 152,
       "left": 226,
       "top": 928,
-      "horizontalPolicy": "fill_space",
-      "verticalPolicy": "fill_space"
+      "horizontal": "fill_space",
+      "vertical": "fill_space"
     },
     {
       "name": "H",
@@ -87,8 +87,8 @@
       "height": 160,
       "left": 452,
       "top": 0,
-      "horizontalPolicy": "fill_space",
-      "verticalPolicy": "fixed"
+      "horizontal": "fill_space",
+      "vertical": "fixed"
     },
     {
       "name": "I",
@@ -96,8 +96,8 @@
       "height": 160,
       "left": 452,
       "top": 160,
-      "horizontalPolicy": "fill_space",
-      "verticalPolicy": "fixed"
+      "horizontal": "fill_space",
+      "vertical": "fixed"
     },
     {
       "name": "J",
@@ -105,8 +105,8 @@
       "height": 400,
       "left": 452,
       "top": 320,
-      "horizontalPolicy": "fill_space",
-      "verticalPolicy": "fixed"
+      "horizontal": "fill_space",
+      "vertical": "fixed"
     },
     {
       "name": "",
@@ -114,8 +114,8 @@
       "height": 360,
       "left": 452,
       "top": 720,
-      "horizontalPolicy": "fill_space",
-      "verticalPolicy": "fill_space"
+      "horizontal": "fill_space",
+      "vertical": "fill_space"
     }
   ]
 }

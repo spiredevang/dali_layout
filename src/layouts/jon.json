@@ -6,8 +6,8 @@
       "height": 112,
       "left": 0,
       "top": 0,
-      "horizontalPolicy": "fill_space",
-      "verticalPolicy": "fixed"
+      "horizontal": "fill_space",
+      "vertical": "fixed"
     },
     {
       "name": "Nav",
@@ -15,8 +15,8 @@
       "height": 854,
       "left": 0,
       "top": 112,
-      "horizontalPolicy": "fixed",
-      "verticalPolicy": "fill_space"
+      "horizontal": "fixed",
+      "vertical": "fill_space"
     },
     {
       "name": "Main",
@@ -24,8 +24,8 @@
       "height": 854,
       "left": 306,
       "top": 112,
-      "horizontalPolicy": "fill_space",
-      "verticalPolicy": "fill_space"
+      "horizontal": "fill_space",
+      "vertical": "fill_space"
     },
     {
       "name": "Aside",
@@ -33,8 +33,8 @@
       "height": 854,
       "left": 1614,
       "top": 112,
-      "horizontalPolicy": "fixed",
-      "verticalPolicy": "fill_space"
+      "horizontal": "fixed",
+      "vertical": "fill_space"
     },
     {
       "name": "Footer",
@@ -42,8 +42,8 @@
       "height": 112,
       "left": 0,
       "top": 966,
-      "horizontalPolicy": "fill_space",
-      "verticalPolicy": "fixed"
+      "horizontal": "fill_space",
+      "vertical": "fixed"
     }
   ]
 }

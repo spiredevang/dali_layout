@@ -92,7 +92,7 @@ export class LayoutNode extends Node {
   }
 
   public get minimumWidth(): number {
-    if(this.rectangle.horizontalPolicy === Constraint.FILL_SPACE) {
+    if(this.rectangle.horizontal === Constraint.FILL_SPACE) {
       return 0;
     } else {
       return this.rectangle.width;
@@ -100,7 +100,7 @@ export class LayoutNode extends Node {
   }
 
   public get minimumHeight(): number {
-    if(this.rectangle.verticalPolicy === Constraint.FILL_SPACE) {
+    if(this.rectangle.vertical === Constraint.FILL_SPACE) {
       return 0;
     } else {
       return this.rectangle.height;
@@ -108,7 +108,7 @@ export class LayoutNode extends Node {
   }
 
   public get maximumWidth(): number {
-    if(this.rectangle.horizontalPolicy === Constraint.FILL_SPACE) {
+    if(this.rectangle.horizontal === Constraint.FILL_SPACE) {
       return MAX_SIZE;
     } else {
       return this.rectangle.width;
@@ -116,7 +116,7 @@ export class LayoutNode extends Node {
   }
 
   public get maximumHeight(): number {
-    if(this.rectangle.verticalPolicy === Constraint.FILL_SPACE) {
+    if(this.rectangle.vertical === Constraint.FILL_SPACE) {
       return MAX_SIZE;
     } else {
       return this.rectangle.height;
@@ -124,7 +124,7 @@ export class LayoutNode extends Node {
   }
 
   public get compressableWidth(): number {
-    if(this.rectangle.horizontalPolicy === Constraint.FILL_SPACE) {
+    if(this.rectangle.horizontal === Constraint.FILL_SPACE) {
       return this.rectangle.width;
     } else {
       return 0;
@@ -132,7 +132,7 @@ export class LayoutNode extends Node {
   }
 
   public get compressableHeight(): number {
-    if(this.rectangle.verticalPolicy === Constraint.FILL_SPACE) {
+    if(this.rectangle.vertical === Constraint.FILL_SPACE) {
       return this.rectangle.height;
     } else {
       return 0;
@@ -140,7 +140,7 @@ export class LayoutNode extends Node {
   }
 
   public get expandableWidth(): number {
-    if(this.rectangle.horizontalPolicy === Constraint.FILL_SPACE) {
+    if(this.rectangle.horizontal === Constraint.FILL_SPACE) {
       return MAX_SIZE;
     } else {
       return 0;
@@ -148,7 +148,7 @@ export class LayoutNode extends Node {
   }
 
   public get expandableHeight(): number {
-    if(this.rectangle.verticalPolicy === Constraint.FILL_SPACE) {
+    if(this.rectangle.vertical === Constraint.FILL_SPACE) {
       return MAX_SIZE;
     } else {
       return 0;
@@ -557,14 +557,14 @@ export class LayoutGraph extends Graph {
         compressableWidth += nodeRow[j].compressableWidth;
         minimumWidth += nodeRow[j].minimumWidth;
         maximumWidth += nodeRow[j].maximumWidth;
-        if(nodeRow[j].Rectangle.verticalPolicy === Constraint.FIXED) {
+        if(nodeRow[j].Rectangle.vertical === Constraint.FIXED) {
           if(fixedHeight === 0) {
             fixedHeight = nodeRow[j].Rectangle.height;
           } else if(fixedHeight !== nodeRow[j].Rectangle.height) {
             areFixedHeightsEqual = false;
             break;
           }
-        } else if(nodeRow[j].Rectangle.verticalPolicy ===
+        } else if(nodeRow[j].Rectangle.vertical ===
             Constraint.FILL_SPACE) {
           minimumFlexibleHeight = Math.min(
             minimumFlexibleHeight, nodeRow[j].Rectangle.height)
@@ -688,14 +688,14 @@ export class LayoutGraph extends Graph {
         compressableHeight += nodeColumn[j].compressableHeight;
         minimumHeight += nodeColumn[j].minimumHeight;
         maximumHeight += nodeColumn[j].maximumHeight;
-        if(nodeColumn[j].Rectangle.horizontalPolicy === Constraint.FIXED) {
+        if(nodeColumn[j].Rectangle.horizontal === Constraint.FIXED) {
           if(fixedWidth === 0) {
             fixedWidth = nodeColumn[j].Rectangle.width;
           } else if(fixedWidth !== nodeColumn[j].Rectangle.width) {
             areFixedWidthsEqual = false;
             break;
           }
-        } else if(nodeColumn[j].Rectangle.horizontalPolicy ===
+        } else if(nodeColumn[j].Rectangle.horizontal ===
             Constraint.FILL_SPACE) {
           minimumFlexibleWidth = Math.min(
             minimumFlexibleWidth, nodeColumn[j].Rectangle.width)

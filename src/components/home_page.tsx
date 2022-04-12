@@ -241,23 +241,23 @@ export class HomePage extends React.Component<Properties, State> {
   }
 
   private getRectangle(object: any) {
-    const horizontalPolicy = getConstraint(object?.horizontalPolicy);
-    const verticalPolicy = getConstraint(object?.verticalPolicy);
+    const horizontal = getConstraint(object?.horizontal);
+    const vertical = getConstraint(object?.vertical);
     if(typeof object?.name === 'string' &&
         typeof object?.width === 'number' &&
         typeof object?.height === 'number' &&
         typeof object?.left === 'number' &&
         typeof object?.top === 'number' &&
-        horizontalPolicy !== null &&
-        verticalPolicy !== null) {
+        horizontal !== null &&
+        vertical !== null) {
       return {
         name: object.name,
         width: object.width,
         height: object.height,
         left: object.left,
         top: object.top,
-        horizontalPolicy,
-        verticalPolicy
+        horizontal,
+        vertical
       } as Rectangle;
     }
   }
@@ -342,8 +342,8 @@ export class HomePage extends React.Component<Properties, State> {
     const layout = displayedRectangles.map(rectangle =>
       ({
         ...rectangle,
-        horizontalPolicy: Constraint[rectangle.horizontalPolicy],
-        verticalPolicy: Constraint[rectangle.verticalPolicy]
+        horizontal: Constraint[rectangle.horizontal],
+        vertical: Constraint[rectangle.vertical]
       }));
     const data = {layout, constraints: this.state.constraints};
     const file = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});

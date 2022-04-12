@@ -4,8 +4,8 @@ export interface Rectangle {
   height: number;
   left: number;
   top: number;
-  horizontalPolicy: Constraint;
-  verticalPolicy: Constraint;
+  horizontal: Constraint;
+  vertical: Constraint;
 }
 
 export enum Constraint {
