@@ -8,6 +8,7 @@ interface Properties {
   rectangleMatrix: Rectangle[][];
   orientation: Orientation;
   limits: Limits;
+  constraintStyles: {[key: string]: string | number};
 }
 
 interface State {
@@ -153,14 +154,18 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
         };
       }
     })() as React.CSSProperties;
+    const width = this.props.constraintStyles[`${rectangle.name}.w`] ??
+      rectangle.width;
+    const height = this.props.constraintStyles[`${rectangle.name}.h`] ??
+      rectangle.height;
     return (
       <div
           key={index}
           style={{
             ...FlexLayoutViewer.STYLE.basicRectangle,
             backgroundColor,
-            width: rectangle.width,
-            height: rectangle.height,
+            width,
+            height,
             ...orientationStyle,
             ...(!this.state.isBorderDisplayed && {borderWidth: 0})
           }}>

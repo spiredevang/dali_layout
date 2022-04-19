@@ -20,6 +20,7 @@ interface State {
   rowLimits: Limits;
   columnLimits: Limits;
   isOriginalLayoutDisplayed: boolean;
+  constraintStyles: {[key: string]: number | string};
   orientation: Orientation;
   isPopupDisplayed: boolean;
 }
@@ -43,6 +44,7 @@ export class HomePage extends React.Component<Properties, State> {
       rowLimits: BASE_LIMITS,
       columnLimits: BASE_LIMITS,
       isOriginalLayoutDisplayed: true,
+      constraintStyles: {},
       orientation: Orientation.ROW,
       isPopupDisplayed: false
     };
@@ -172,7 +174,8 @@ export class HomePage extends React.Component<Properties, State> {
               <FlexLayoutViewer 
                 rectangleMatrix={rectangleMatrix}
                 limits={limits}
-                orientation={this.state.orientation}/>
+                orientation={this.state.orientation}
+                constraintStyles={this.state.constraintStyles}/>
             </Popup>)}
         </div>
       </div>);
