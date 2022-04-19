@@ -1,0 +1,144 @@
+{
+  "layout": [
+    {
+      "name": "A",
+      "width": 100,
+      "height": 100,
+      "left": 0,
+      "top": 0,
+      "horizontal": "fixed",
+      "vertical": "fixed"
+    },
+    {
+      "name": "B",
+      "width": 100,
+      "height": 100,
+      "left": 100,
+      "top": 0,
+      "horizontal": "fixed",
+      "vertical": "fixed"
+    },
+    {
+      "name": "X1",
+      "width": 100,
+      "height": 100,
+      "left": 200,
+      "top": 0,
+      "horizontal": "fill_space",
+      "vertical": "fill_space"
+    },
+    {
+      "name": "Y1",
+      "width": 50,
+      "height": 100,
+      "left": 300,
+      "top": 0,
+      "horizontal": "fill_space",
+      "vertical": "fill_space"
+    },
+    {
+      "name": "Y2",
+      "width": 100,
+      "height": 100,
+      "left": 350,
+      "top": 0,
+      "horizontal": "fill_space",
+      "vertical": "fill_space"
+    },
+    {
+      "name": "C",
+      "width": 100,
+      "height": 100,
+      "left": 0,
+      "top": 100,
+      "horizontal": "fixed",
+      "vertical": "fixed"
+    },
+    {
+      "name": "X2",
+      "width": 100,
+      "height": 100,
+      "left": 100,
+      "top": 100,
+      "horizontal": "fill_space",
+      "vertical": "fill_space"
+    },
+    {
+      "name": "D",
+      "width": 100,
+      "height": 100,
+      "left": 200,
+      "top": 100,
+      "horizontal": "fixed",
+      "vertical": "fixed"
+    },
+    {
+      "name": "Y3",
+      "width": 75,
+      "height": 100,
+      "left": 300,
+      "top": 100,
+      "horizontal": "fill_space",
+      "vertical": "fill_space"
+    },
+    {
+      "name": "Y4",
+      "width": 75,
+      "height": 100,
+      "left": 375,
+      "top": 100,
+      "horizontal": "fill_space",
+      "vertical": "fill_space"
+    },
+    {
+      "name": "X3",
+      "width": 100,
+      "height": 100,
+      "left": 0,
+      "top": 200,
+      "horizontal": "fill_space",
+      "vertical": "fill_space"
+    },
+    {
+      "name": "E",
+      "width": 100,
+      "height": 100,
+      "left": 100,
+      "top": 200,
+      "horizontal": "fixed",
+      "vertical": "fixed"
+    },
+    {
+      "name": "F",
+      "width": 100,
+      "height": 100,
+      "left": 200,
+      "top": 200,
+      "horizontal": "fixed",
+      "vertical": "fixed"
+    },
+    {
+      "name": "Y5",
+      "width": 50,
+      "height": 100,
+      "left": 300,
+      "top": 200,
+      "horizontal": "fill_space",
+      "vertical": "fill_space"
+    },
+    {
+      "name": "G",
+      "width": 100,
+      "height": 100,
+      "left": 350,
+      "top": 200,
+      "horizontal": "fixed",
+      "vertical": "fixed"
+    }
+  ],
+  "constraints": [
+    "A.width = 2 * B.width",
+    "F.width = E.width / 2",
+    "C.width = D.width + 100"
+  ]
+}

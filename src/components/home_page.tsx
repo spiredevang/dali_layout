@@ -93,6 +93,9 @@ export class HomePage extends React.Component<Properties, State> {
               <option value='unaligned_grid_3x3.json'>
                 Unaligned Grid (3x3)
               </option>
+              <option value='rectangle_grid_5x3.json'>
+                Rectangle Grid (5x3)
+              </option>
               <option value='arthur.json'>Arthur</option>
               <option value='darryl.json'>Darryl</option>
               <option value='jess.json'>Jess</option>
