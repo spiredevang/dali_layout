@@ -770,11 +770,11 @@ export class LayoutGraph extends Graph {
   }
 
   public get ResizedRows(): Rectangle[][] {
-    return this.resizedRows;
+    return getConfigurationCopy(this.resizedRows);
   }
 
   public get ResizedColumns(): Rectangle[][] {
-    return this.resizedColumns;
+    return getConfigurationCopy(this.resizedColumns);
   }  
 
   public get RowLimits(): Limits {
@@ -787,19 +787,21 @@ export class LayoutGraph extends Graph {
 
   public get RowConfiguration(): Rectangle[][] {
     if(this.rowConfiguration.length) {
-      return this.rowConfiguration.map(row =>
+      const rowConfiguration = this.rowConfiguration.map(row =>
         row.map(nodeKey => this.nodesObject[nodeKey].Rectangle));
+      return getConfigurationCopy(rowConfiguration);
     } else {
-      return this.resizedRows;
+      return this.ResizedRows;
     }
   }
 
   public get ColumnConfiguration(): Rectangle[][] {
     if(this.columnConfiguration.length) {
-      return this.columnConfiguration.map(column =>
+      const columnConfiguration = this.columnConfiguration.map(column =>
         column.map(nodeKey => this.nodesObject[nodeKey].Rectangle));
+      return getConfigurationCopy(columnConfiguration);
     } else {
-      return this.resizedColumns;
+      return this.ResizedColumns;
     }
   }
 
@@ -823,4 +825,9 @@ export class LayoutGraph extends Graph {
   private boundaryY: number;
   private horizontalEdges: {[key: string]: HorizontalEdge};
   private verticalEdges: {[key: string]: VerticalEdge};
+}
+
+function getConfigurationCopy(configuration: Rectangle[][]) {
+  return configuration.map((set: Rectangle[]) =>
+    set.map((rect: Rectangle) => ({...rect})));
 }
