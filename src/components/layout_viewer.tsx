@@ -21,7 +21,7 @@ export class LayoutViewer extends React.Component<Properties> {
     const backgroundColor = (isConstraintUniform &&
       LayoutViewer.CONSTRAINT_COLORS[rectangle.horizontal]) || '#F5F5F5';
     const extraStyle = getRectangleBorderStyles(rectangle);
-    const nonUniformStyle = isConstraintUniform && {} || {
+    const nonUniformStyle = (isConstraintUniform && {}) || {
       margin: 1,
       width: rectangle.width - 2,
       height: rectangle.height - 2
