@@ -149,23 +149,21 @@ export class HomePage extends React.Component<Properties, State> {
             </div>
             <RectanglesInput rectangles={displayedRectangles}
               onUpdate={this.onUpdateRectangles}/>
-            {this.state.constraints.length > 0 &&
-              <div style={HomePage.STYLE.constraintsContainer}>
-                {this.state.constraints.map((constraint, index) => 
-                  <div key={index} style={HomePage.STYLE.constraintRow}>
-                    <input name="" value={constraint}
-                      onChange={this.onChangeConstraint(index)}
-                      style={HomePage.STYLE.constraintInput}/>
-                    <button onClick={() => this.onRemoveConstraint(index)}>
-                      REMOVE
-                    </button>
-                  </div>)}
-                <button onClick={this.onAddConstraint}>ADD CONSTRAINT</button>
-              </div>}
-            {this.state.rectangles.length > 0 && 
-              <button onClick={this.onDownloadJSON}>
-                DOWNLOAD JSON
-              </button>}
+            <div style={HomePage.STYLE.constraintsContainer}>
+              {this.state.constraints.map((constraint, index) => 
+                <div key={index} style={HomePage.STYLE.constraintRow}>
+                  <input name="" value={constraint}
+                    onChange={this.onChangeConstraint(index)}
+                    style={HomePage.STYLE.constraintInput}/>
+                  <button onClick={() => this.onRemoveConstraint(index)}>
+                    REMOVE
+                  </button>
+                </div>)}
+              <button onClick={this.onAddConstraint}>ADD CONSTRAINT</button>
+            </div>
+            <button onClick={this.onDownloadJSON}>
+              DOWNLOAD JSON
+            </button>
           </div>
         </div>
         <div style={HomePage.STYLE.popupContainer}>
