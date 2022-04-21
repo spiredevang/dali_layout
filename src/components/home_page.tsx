@@ -1,3 +1,4 @@
+import {css} from 'aphrodite';
 import * as React from 'react';
 import {BASE_LIMITS, LayoutGraph, Limits} from '../graph';
 import {EqualityConstraint, EvaluatePostFix, HEIGHT_REGEX, MEASUREMENT_REGEX,
@@ -179,6 +180,15 @@ export class HomePage extends React.Component<Properties, State> {
             </Popup>)}
         </div>
       </div>);
+  }
+
+  public componentDidMount() {
+    css(BORDER_STYLES[`H0V1`].border);
+    css(BORDER_STYLES[`H1V0`].border);
+    css(BORDER_STYLES[`H0V2`].border);
+    css(BORDER_STYLES[`H2V0`].border);
+    css(BORDER_STYLES[`H1V2`].border);
+    css(BORDER_STYLES[`H2V1`].border);
   }
 
   private onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
