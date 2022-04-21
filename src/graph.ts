@@ -1,5 +1,10 @@
 import {Constraint, Rectangle} from './rectangle';
 
+export function getConfigurationCopy(configuration: Rectangle[][]) {
+  return configuration.map((set: Rectangle[]) =>
+    set.map((rect: Rectangle) => ({...rect})));
+}
+
 const MAX_SIZE = 2**24;
 
 interface HorizontalEdge {
@@ -825,9 +830,4 @@ export class LayoutGraph extends Graph {
   private boundaryY: number;
   private horizontalEdges: {[key: string]: HorizontalEdge};
   private verticalEdges: {[key: string]: VerticalEdge};
-}
-
-function getConfigurationCopy(configuration: Rectangle[][]) {
-  return configuration.map((set: Rectangle[]) =>
-    set.map((rect: Rectangle) => ({...rect})));
 }

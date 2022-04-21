@@ -1,6 +1,8 @@
 const NUMBER_REGEX = /^\d+/;
-const PROPERTY_REGEX = /^[a-z0-9]+\.(w(idth)?|h(eight)?)/i;
-const CONTAINER_REGEX = /^(w(idth)?|h(eight)?)/i;
+export const PROPERTY_REGEX = /^[a-z0-9]+\.(w(idth)?|h(eight)?)/i;
+export const MEASUREMENT_REGEX = /^(w(idth)?|h(eight)?)/i;
+export const WIDTH_REGEX = /^(w(idth)?)/i;
+export const HEIGHT_REGEX = /^(h(eight)?)/i;
 const OPERATORS = '-+/*^';
 const PRECEDENCE = {
   '^': 4,
@@ -119,8 +121,8 @@ function getPostfixfromInfix(infix: string) {
         infix = infix.replace(`${propertyLong[0]}`, '');
         postfix.push(propertyLong[0]);
       }
-    } else if(CONTAINER_REGEX.test(infix)){
-      const containerLong = CONTAINER_REGEX.exec(infix);
+    } else if(MEASUREMENT_REGEX.test(infix)){
+      const containerLong = MEASUREMENT_REGEX.exec(infix);
       if(containerLong !== null) {
         infix = infix.replace(`${containerLong[0]}`, '');
         postfix.push(containerLong[0]);
@@ -158,7 +160,7 @@ function getPostfixfromInfix(infix: string) {
   return postfix;
 }
 
-function EvaluatePostFix(postFix: (number|string)[]) {
+export function EvaluatePostFix(postFix: (number|string)[]) {
   const numbers = [];
   const postFixCopy = postFix.slice();
   while(postFixCopy.length) {

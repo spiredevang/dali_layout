@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {BASE_LIMITS, LayoutGraph, Limits} from '../graph';
-import {EqualityConstraint} from '../equality_constraint';
+import {EqualityConstraint, EvaluatePostFix, HEIGHT_REGEX, MEASUREMENT_REGEX,
+  WIDTH_REGEX} from '../equality_constraint';
 import {Constraint, Rectangle} from '../rectangle';
-import {getConstraint} from '../utilities';
+import {BORDER_STYLES, getConstraint} from '../utilities';
 import {Popup} from './popup';
 import {FlexLayoutViewer} from './flex_layout_viewer';
 import {LayoutViewer} from './layout_viewer';
@@ -13,7 +14,6 @@ interface Properties {}
 interface State {
   rectangles: Rectangle[];
   constraints: string[];
-  equalityConstraints: EqualityConstraint[],
   resizedRectangles: Rectangle[];
   rowConfiguration: Rectangle[][];
   columnConfiguration: Rectangle[][];
@@ -37,7 +37,6 @@ export class HomePage extends React.Component<Properties, State> {
     this.state = {
       rectangles: [],
       constraints: [],
-      equalityConstraints: [],
       resizedRectangles: [],
       rowConfiguration: [],
       columnConfiguration: [],
@@ -217,9 +216,7 @@ export class HomePage extends React.Component<Properties, State> {
         }, []);
       if(rectangles) {
         this.layoutGraph = new LayoutGraph(rectangles);
-        const constraints = this.validateConstraints(object.constraints);
-        const equalityConstraints = constraints.map(constraint => 
-          new EqualityConstraint(constraint));
+        const constraints = this.validateJSONConstraints(object.constraints);
         const resizedRectangles = (this.layoutGraph.ResizedRows.length &&
           this.layoutGraph.ResizedRows.flat()) ||
           this.layoutGraph.ResizedColumns.flat();
@@ -232,7 +229,6 @@ export class HomePage extends React.Component<Properties, State> {
         this.setState({
           rectangles,
           constraints,
-          equalityConstraints,
           resizedRectangles,
           rowConfiguration,
           columnConfiguration,
@@ -266,7 +262,7 @@ export class HomePage extends React.Component<Properties, State> {
     }
   }
 
-  private validateConstraints(object: any) {
+  private validateJSONConstraints(object: any) {
     if(Array.isArray(object) && object.every(
         element => typeof element === 'string')) {
       return object;
@@ -316,18 +312,114 @@ export class HomePage extends React.Component<Properties, State> {
     const columnConfiguration = this.layoutGraph.ColumnConfiguration;
     const rowLimits = this.layoutGraph.RowLimits;
     const columnLimits = this.layoutGraph.ColumnLimits;
+    const displayConfiguration = this.state.orientation === Orientation.ROW &&
+      rowConfiguration || columnConfiguration;
+    const constraintStyles = this.getConstraintStyles(displayConfiguration);
     const isPopupDisplayed = ((this.state.orientation === Orientation.ROW) &&
       rowConfiguration.length > 0) ||
       ((this.state.orientation === Orientation.COLUMN)
-      && columnConfiguration.length > 0)
+      && columnConfiguration.length > 0);
     this.setState({
       resizedRectangles,
       rowConfiguration,
       columnConfiguration,
       rowLimits,
+      constraintStyles,
       columnLimits,
       isPopupDisplayed
     });
+  }
+
+  private getConstraintStyles(configuration: Rectangle[][]) {
+    const nameMap = {} as {[key: string]: [number, number]};
+    configuration.forEach((rectangleList, i) => {
+      rectangleList.forEach((rectangle, j) => {
+        nameMap[rectangle.name] = [i, j];
+      });
+    });
+    this.updateConfiguration(configuration, this.state.constraints, nameMap);
+    return this.generateConstraintStyles(configuration);
+  }
+
+  private updateConfiguration(configuration: Rectangle[][],
+      constraints: string[], nameMap: {[key: string]: [number, number]}) {
+    constraints.forEach(constraint => {
+      const equalityConstraint = new EqualityConstraint(constraint);
+      const affectedProperties = equalityConstraint.AffectedProperties;
+      const affectedRectProperties = affectedProperties.shift() as
+        {name: string, attribute: string, index: number};
+      const affectedRectIndex = nameMap[affectedRectProperties.name];
+      const affectedRect = configuration[affectedRectIndex[0]]
+        [affectedRectIndex[1]];
+      if(MEASUREMENT_REGEX.test(affectedRectProperties.attribute)) {
+        const postfixNotation = equalityConstraint.PostfixNotation;
+        let attributeConstraint = Constraint.FIXED;
+        affectedProperties.forEach(({name, attribute, index}) => {
+          const rectIndex = nameMap[name];
+          const rect = configuration[rectIndex[0]][rectIndex[1]] as Rectangle;
+          if(WIDTH_REGEX.test(attribute)) {
+            postfixNotation[index] = rect.width;
+            if(rect.horizontal === Constraint.FILL_SPACE) {
+              attributeConstraint = Constraint.FILL_SPACE;
+            }
+          } else if(HEIGHT_REGEX.test(attribute)) {
+            postfixNotation[index] = rect.height;
+            if(rect.vertical === Constraint.FILL_SPACE) {
+              attributeConstraint = Constraint.FILL_SPACE;
+            }
+          }
+        });
+        const updatedValue = EvaluatePostFix(postfixNotation);
+        if(WIDTH_REGEX.test(affectedRectProperties.attribute)) {
+          affectedRect.width = updatedValue;
+          affectedRect.horizontal = attributeConstraint;
+        } else if(HEIGHT_REGEX.test(affectedRectProperties.attribute)) {
+          affectedRect.height = updatedValue;
+          affectedRect.vertical = attributeConstraint;
+        }
+      }
+    });
+  }
+
+  private generateConstraintStyles(configuration: Rectangle[][]) {
+    const constraintStyles = {} as {[key: string]: string | number};
+    configuration.forEach(rectangleList => {
+      const [policyDirection, measurement] = (() => {
+        if(this.state.orientation === Orientation.ROW) {
+          return ['horizontal', 'width'];
+        } else {
+          return ['vertical', 'height'];
+        }
+      })() as ['horizontal' | 'vertical', 'width' | 'height'];
+      const [totalFix, totalFlex] = rectangleList.reduce((total, rect) => {
+          total[0] += rect[policyDirection] === Constraint.FIXED ?
+            rect[measurement] : 0
+          total[1] += rect[policyDirection] === Constraint.FILL_SPACE ?
+            rect[measurement] : 0
+          return total;
+      }, [0, 0]);
+      rectangleList.forEach(rect => {
+        const [percent, pixels] = (() => {
+          if(rect[policyDirection] === Constraint.FIXED) {
+            return [0, rect[measurement]];
+          } else {
+            const ratio = rect[measurement] / totalFlex;
+            return [Math.round(100 * ratio), Math.round(-ratio * totalFix)];
+          }
+        })();
+        if(!percent) {
+          constraintStyles[`${rect.name}.${measurement}`] = pixels;
+        } else if(!pixels) {
+          constraintStyles[`${rect.name}.${measurement}`] = `${percent}%`;
+        } else {
+          const pixelSign = (pixels < 0 && '-') || '+';
+          const pixelValue = Math.abs(pixels);
+          constraintStyles[`${rect.name}.${measurement}`] =
+            `calc(${percent}% ${pixelSign} ${pixelValue}px)`;
+        }
+      });
+    });
+    return constraintStyles;
   }
 
   private onCloseLayoutPopup = () => {

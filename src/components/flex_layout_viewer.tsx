@@ -154,9 +154,9 @@ export class FlexLayoutViewer extends React.Component<Properties, State> {
         };
       }
     })() as React.CSSProperties;
-    const width = this.props.constraintStyles[`${rectangle.name}.w`] ??
+    const width = this.props.constraintStyles[`${rectangle.name}.width`] ??
       rectangle.width;
-    const height = this.props.constraintStyles[`${rectangle.name}.h`] ??
+    const height = this.props.constraintStyles[`${rectangle.name}.height`] ??
       rectangle.height;
     return (
       <div
