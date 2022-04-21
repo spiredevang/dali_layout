@@ -39,20 +39,27 @@ export class EqualityConstraint {
   }
 
   public get PostfixNotation(): (string|number)[] {
-    return this.postfixNotation;
+    return this.postfixNotation.slice();
   }
 
-  public get AffectedProperties(): string[] {
-    const properties = [this.property.split('.')[0]];
-    this.postfixNotation.forEach(token => {
+  public get AffectedProperties():
+      {name: string, attribute: string, index: number}[] {
+    const [name, attribute] = this.property.split('.');
+    const properties = [{name, attribute, index: 0}];
+    this.postfixNotation.forEach((token, index) => {
       if((typeof token === 'string') && token.length > 1) {
-        properties.push(token.split('.')[0]);
+        const property = token.split('.');
+        properties.push({
+          name: property[0],
+          attribute: property[1],
+          index
+        });
       }
     });
     return properties;
   }
 
-  public evaluate(): number[] {
+  public evaluate(): number {
     return EvaluatePostFix(this.postfixNotation);
   }
 
@@ -188,5 +195,5 @@ function EvaluatePostFix(postFix: (number|string)[]) {
       }
     }
   }
-  return numbers;
+  return numbers[0];
 }
