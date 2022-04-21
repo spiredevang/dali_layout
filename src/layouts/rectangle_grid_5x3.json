@@ -137,7 +137,7 @@
     }
   ],
   "constraints": [
-    "A.width = 2 * B.width",
+    "A.width = 2 * X1.width",
     "F.width = E.width / 2",
     "C.width = D.width + 100"
   ]
