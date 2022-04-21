@@ -20,65 +20,61 @@ const CONSTRAINT_COLORS = {
   [Constraint.FIT_CONTENT]: '#00BF2D',
 };
 
+export const BORDER_STYLES = (() => {
+  const borderStylesObject = {} as {[key: string]: any};
+  const borderPairs = [
+    [Constraint.FIXED, Constraint.FILL_SPACE],
+    [Constraint.FILL_SPACE, Constraint.FIXED],
+    [Constraint.FIXED, Constraint.FIT_CONTENT],
+    [Constraint.FIT_CONTENT, Constraint.FIXED],
+    [Constraint.FILL_SPACE, Constraint.FIT_CONTENT],
+    [Constraint.FIT_CONTENT, Constraint.FILL_SPACE]
+  ];
+  borderPairs.forEach(borderPair => {
+    const mainConstraint = (borderPair[0] === Constraint.FIXED) ||
+      (borderPair[1] === Constraint.FIXED) ? Constraint.FIXED :
+      Constraint.FILL_SPACE;
+    const mainColor = CONSTRAINT_COLORS[mainConstraint];
+    const [secondColor, borderA, borderB, positionA, positionB, measurement] =
+      (() => {
+        if(borderPair[0] === mainConstraint) {
+          return [CONSTRAINT_COLORS[borderPair[1]], 'borderTop',
+            'borderBottom', 'top', 'bottom', 'width'];
+        } else {
+          return [CONSTRAINT_COLORS[borderPair[0]], 'borderLeft',
+            'borderRight', 'left', 'right', 'height'];
+        }
+      })();
+    borderStylesObject[`H${borderPair[0]}V${borderPair[1]}`] = StyleSheet.
+      create({
+        border: {
+          border: `8px solid ${mainColor}`,
+          '::before': {
+            display: 'block',
+            content: '""',
+            [borderA]: `8px solid ${secondColor}`,
+            position: 'absolute',
+            [positionA]: -8,
+            [measurement]: '100%'
+          },
+          '::after': {
+            display: 'block',
+            content: '""',
+            [borderB]: `8px solid ${secondColor}`,
+            position: 'absolute',
+            [positionB]: -8,
+            [measurement]: '100%'
+          }
+        }
+      });
+  });
+  return borderStylesObject;
+})();
+
 export function getRectangleBorderStyles(rectangle: Rectangle) {
-  const isConstraintUniform = rectangle.horizontal ===
-    rectangle.vertical;
-  if(isConstraintUniform) {
+  if(rectangle.horizontal === rectangle.vertical) {
     return '';
   }
-  const mainConstraint = (rectangle.horizontal === Constraint.FIXED)
-    || (rectangle.vertical === Constraint.FIXED) ? Constraint.FIXED :
-    Constraint.FILL_SPACE;
-  const mainColor = CONSTRAINT_COLORS[mainConstraint];
-  if(rectangle.horizontal === mainConstraint) {
-    const secondColor = CONSTRAINT_COLORS[
-      rectangle.vertical];
-    const extraStyles = StyleSheet.create({
-      rectangle: {
-        border: `8px solid ${mainColor}`,
-        '::before': {
-          display: 'block',
-          content: '""',
-          borderTop: `8px solid ${secondColor}`,
-          position: 'absolute',
-          top: -8,
-          width: '100%'
-        },
-        '::after': {
-          display: 'block',
-          content: '""',
-          borderBottom: `8px solid ${secondColor}`,
-          position: 'absolute',
-          bottom: -8,
-          width: '100%'
-        }
-      }
-    })
-    return css(extraStyles.rectangle);
-  } else {
-    const secondColor = CONSTRAINT_COLORS[
-      rectangle.horizontal];
-    const extraStyles = StyleSheet.create({
-      rectangle: {
-        border: `8px solid ${mainColor}`,
-        '::before': {
-          display: 'block',
-          content: '""',
-          borderLeft: `8px solid ${secondColor}`,
-          position: 'absolute',
-          left: -8,
-          height: '100%'
-        },
-        '::after': {
-          display: 'block',
-          content: '""',
-          borderRight: `8px solid ${secondColor}`,
-          position: 'absolute',
-          right: -8,
-          height: '100%'
-        }
-      }
-    });
-    return css(extraStyles.rectangle);
-  }
+  return css(BORDER_STYLES[
+    `H${rectangle.horizontal}V${rectangle.vertical}`].border);
 }
